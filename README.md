@@ -118,6 +118,18 @@ player_lookup,player_name,team_key,role_on_team
 
 TODO: It would be much better to have unique keys for every player.
 
+### Gmail settings
+
+Currently, there may be an issue that if you don't have a gmail OAuth token, you might run into issues when you start the server.
+
+TODO: Add more details/resources on how to setup the gmail token.
+
+### SSL settings
+
+If you want to run a secure server, you will need to setup a certificate file.
+`.credentials/https.opts.mnp.json`
+TODO: Add more details/resources on how to setup the certificate.
+
 ## League Operation
 
 ### Importing a season
@@ -143,3 +155,27 @@ Eventually stats would likely be real time, but for now we run a script to gener
 ```
 node run util/compute-stats
 ```
+
+### Starting the server
+
+To get things running, you can run one of the following commands:
+```
+# Start just HTTP (you will need to have sudo/root access)
+node http.js
+
+# Start just in HTTPS (you will need to have sudo/root
+# as well as the necessary certificate config)
+node https.js
+
+# Start the service on both 80 and 443, with a redirect to 443
+# This is what the website uses (after some service wrapping).
+node app.js
+```
+
+If you are interested in how to wrap up the app to run as a service, we use `forever` and `forever-service`, both npm modules and not too hard to setup.
+However, we don't feel like this is the best long term solution.
+There are more solutions, and layers like `nginx` that can help clean up our solution.
+
+## Contributing
+
+We very much want developers to be able to help make the MNP site more reliable, secure, beautiful, and responsive. Feel free to submit PRs, and check out our [issues](https://github.com/mondaynightpinball/main/issues).
