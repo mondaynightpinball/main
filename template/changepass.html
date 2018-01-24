@@ -1,0 +1,27 @@
+<h3>Change Password</h3>
+<form action="/changepass" method="POST">
+{{#redirect_url}}
+<input type="hidden" name="redirect_url" value="{{.}}">
+{{/redirect_url}}
+<table>
+<tr>
+<td>Player Key:</td>
+<td>{{ukey}}</td>
+</tr>
+<tr>
+<td>Old Password:</td>
+<td><input type="password" name="old"></td>
+</tr>
+<tr>
+<td>New Password:</td>
+<td><input type="password" name="pass"></td>
+</tr>
+<tr>
+<td>Confirm New Password:</td>
+<td><input type="password" name="conf"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td><input type="submit" value="Change Password"></td>
+</tr>
+</table>

@@ -1,0 +1,33 @@
+<table class="table">
+<thead>
+<tr>
+<td><a href="/matches/{{key}}">{{name}}</a></td>
+{{#rounds}}
+<td class="text-xs-right">
+<a href="/matches/{{key}}?round={{n}}">{{n}}</a>
+</td>
+{{/rounds}}
+<td class="text-xs-right">B</td>
+<td class="text-xs-right pl-0">Total</td>
+</tr>
+</thead>
+<tr>
+<td><a href="/matches/{{key}}/away">{{away_team}}</a></td>
+{{#rounds}}
+<td class="text-xs-right">{{away}}</td>
+{{/rounds}}
+<td class="text-xs-right">{{away_bonus}}</td>
+<td class="text-xs-right">{{away_total}}</td>
+</tr>
+<tr>
+<td><a href="/matches/{{key}}/home">{{home_team}}</a></td>
+{{#rounds}}
+<td class="text-xs-right">{{home}}</td>
+{{/rounds}}
+<td class="text-xs-right">{{home_bonus}}</td>
+<td class="text-xs-right">{{home_total}}</td>
+</tr>
+</table>
+Venue: <a href="/matches/{{key}}/venue">{{venue}}</a>
+<hr>
+{{#round}}<b>Round: {{.}}</b><br>{{/round}}

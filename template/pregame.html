@@ -1,0 +1,94 @@
+<!-- New Match FORMING -->
+{{> head}}
+<h3>PREGAME</h3>
+
+<table class="table">
+<tr>
+<td>AWAY: {{away.lineup.length}}</td>
+<td>HOME: {{home.lineup.length}}</td>
+</tr>
+<tr>
+<td><a href="/matches/{{key}}/away">{{away_team}}</a></td>
+<td><a href="/matches/{{key}}/home">{{home_team}}</a></td>
+</tr>
+{{#rows}}
+<tr>
+<td>{{away}}</td>
+<td>{{home}}</td>
+</tr>
+<tr class="small pt-0" style="border-top:0px;">
+<td>{{away_rank}}</td>
+<td>{{home_rank}}</td>
+</tr>
+{{/rows}}
+<tr>
+<td>
+{{#away.ready}}
+{{#away.confirmed}}
+CONFIRMED by {{by}}
+{{/away.confirmed}}
+{{^away.confirmed}}
+{{#isRightCaptain}}
+<form action="/matches/{{key}}/confirm" method="POST">
+<input name="right" type="submit" class="btn btn-sm btn-primary" value="CONFIRM OPPONENT">
+</form>
+{{/isRightCaptain}}
+{{^isRightCaptain}}
+READY
+{{/isRightCaptain}}
+{{/away.confirmed}}
+{{/away.ready}}
+{{^away.ready}}
+{{#isLeftCaptain}}
+<!--
+<a href="/matches/{{key}}/away">SET LINEUP</a>
+<form action="/matches/{{key}}/away" method="GET">
+</form>
+<input type="button" value="REVIEW MY LINEUP" onclick="window.location='/matches/{{key}}/away';">
+-->
+<button type="submit" class="btn btn-primary btn-sm" onclick="window.location='/matches/{{key}}/away';">REVIEW LINEUP</button>
+
+{{/isLeftCaptain}}
+{{^isLeftCaptain}}
+SETTING LINEUP...
+{{/isLeftCaptain}}
+<!--
+<a href="/matches/{{key}}/away">SET LINEUP</a>
+-->
+{{/away.ready}}
+</td>
+<td>
+{{#home.ready}}
+{{#home.confirmed}}
+CONFIRMED by {{by}}
+{{/home.confirmed}}
+{{^home.confirmed}}
+{{#isLeftCaptain}}
+<form action="/matches/{{key}}/confirm" method="POST">
+<input name="left" type="submit" class="btn btn-sm btn-primary" value="CONFIRM OPPONENT">
+</form>
+{{/isLeftCaptain}}
+{{^isLeftCaptain}}
+READY
+{{/isLeftCaptain}}
+{{/home.confirmed}}
+{{/home.ready}}
+{{^home.ready}}
+{{#isRightCaptain}}
+<!--
+<a href="/matches/{{key}}/home">SET LINEUP</a>
+<form action="/matches/{{key}}/home" method="GET">
+<input name="right" type="submit" value="REVIEW MY LINEUP">
+</form>
+<input type="button" value="REVIEW MY LINEUP" onclick="window.location='/matches/{{key}}/home';">
+-->
+<button type="submit" class="btn btn-primary btn-sm" onclick="window.location='/matches/{{key}}/home';">REVIEW LINEUP</button>
+{{/isRightCaptain}}
+{{^isRightCaptain}}
+SETTING LINEUP...
+{{/isRightCaptain}}
+{{/home.ready}}
+</td>
+</tr>
+
+</table>

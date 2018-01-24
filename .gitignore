@@ -1,0 +1,11 @@
+data/
+node_modules/
+uploads/
+.credentials/
+.DS_Store # Away with Apple junk
+*.swp
+.env
+tmp
+temp
+# Basically data. Should probably be moved under data anyways.
+results/

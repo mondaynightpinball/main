@@ -1,0 +1,16 @@
+<!-- VENUES -->
+<!--
+<h3>VENUES</h3>
+-->
+<table class="table">
+{{#venues}}
+<tr>
+<td><a href="/venues/{{key}}">{{name}}</a></td>
+<tr>
+{{/venues}}
+</table>
+{{#canCreate}}
+<div id="create-div">
+<a href="/venues/create">NEW VENUE</a>
+</div>
+{{/canCreate}}

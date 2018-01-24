@@ -1,0 +1,122 @@
+<!-- PICKING -->
+{{> head}}
+{{#errors}}
+<span style="color:red;font-weight:bold;">{{.}}</span><br>
+{{/errors}}
+{{#shared}}
+<b>
+  TIE-BREAKER! Please make picks on paper, as described in
+  <a href="/rules">MNP RULES</a>. Then, have home team
+  enter all the machines and their players. Then, have away
+  team enter their players. Home team will play first in each game.
+</b>
+{{/shared}}
+<!-- {{role}} -->
+<b>Picking: {{team_name}}</b>
+
+{{#editable}}
+<form action="/matches/{{key}}/picks" method="POST">
+<input type="hidden" name="state" value="picking"> <!-- {{state}} -->
+<input type="hidden" name="round" value="{{round}}">
+{{/editable}}
+
+<table class="table">
+<tbody id="games">
+</tbody>
+</table>
+
+{{#editable}}
+<center>
+<input type="submit" class="btn btn-sm btn-primary" value="SUBMIT">
+</center>
+</form>
+{{/editable}}
+
+<script>
+var machines = {{&machines}};
+var games = {{&games}};
+var lineup = {{&lineup}};
+var labels = {{&labels}};
+
+function makeSelect(name, hint, options, selected) {
+  var html = '<select name="' +name+ '" class="custom-select">'+
+             '<option value="">' +hint+ '</option>';
+  for(var i = 0; i < options.length; i++) {
+    var opt = options[i];
+    var value = opt.value || opt;
+    var label = opt.label || labels[opt];
+    var sel = value == selected ? ' selected' : '';
+    html += '<option value="' +value+ '"' +sel+ '>' +label+ '</option>';
+  }
+  html += '</select>';
+  return html;
+}
+
+var chunk = '';
+
+console.log('num games: ', games.length);
+
+var players = [];
+for(k in lineup) {
+  // players.push(lineup[k].key);
+  var np = lineup[k].num_played;
+  var npl = np > 0 ? '(' +np+ ') ' : '';
+  players.push({
+    value: lineup[k].key,
+    label: npl + lineup[k].name
+  });
+}
+
+//Need to render games.
+for(var i = 0; i < games.length; i++) {
+  var game = games[i];
+
+console.log('games['+i+']: ',game);
+  //Always a first row.
+  chunk += '<tr class="header-row"><td>#' +game.n+ ':  ';
+  {{#editable}}
+  chunk += makeSelect('machine.'+game.n, 'Select Machine', machines, game.machine);
+  {{/editable}}
+  {{^editable}}
+  chunk += labels[game.machine] || 'Machine';
+  {{/editable}}
+  chunk += '</td>';
+
+  chunk += '</tr><tr>';
+
+  chunk += '<td>';
+  {{#editable}}
+  chunk += makeSelect('player_1.'+game.n, 'Player 1', players, game.player_1);
+  {{/editable}}
+  {{^editable}}
+  chunk += labels[game.player_1] || 'Player 1';
+  {{/editable}}
+  chunk += '</td></tr>';
+
+  {{#shared}}
+  chunk += '<tr><td>';
+  {{#editable}}
+  chunk += makeSelect('player_3.'+game.n, 'Shared Partner', players, game.player_3);
+  {{/editable}}
+  {{^editable}}
+  chunk += labels[game.player_3] || 'Shared Partner';
+  {{/editable}}
+  chunk += '</td></tr>';
+  {{/shared}}
+
+  {{#doubles}}
+  chunk += '<tr><td>';
+  {{#editable}}
+  chunk += makeSelect('player_3.'+game.n, 'Player 3', players, game.player_3);
+  {{/editable}}
+  {{^editable}}
+  chunk += labels[game.player_3] || 'Player 3';
+  {{/editable}}
+  chunk += '</td></tr>';
+  {{/doubles}}
+}
+
+var el = document.getElementById('games');
+el.innerHTML = chunk + el.innerHTML;
+
+</script>

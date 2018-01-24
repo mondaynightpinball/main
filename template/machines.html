@@ -1,0 +1,26 @@
+{{#canAdd}}
+<div class="jumbotron">
+  <form action="/machines" method="POST">
+  <input type="text" name="mkey" class="form-control" placeholder="Machine Code (no spaces)">
+  <input type="text" name="name" class="form-control" placeholder="Machine Name">
+  <button type="submit" class="btn btn-primary btn-sm mt-1">ADD</button>
+  </form>
+</div>
+{{/canAdd}}
+
+<table class="table table-striped">
+{{#machines}}
+<tr>
+<td>{{key}}</td>
+<td>{{name}}</td>
+{{#canRemove}}
+<td style="padding-top:5px;padding-bottom:5px;">
+<form action="/machines/{{key}}/remove" method="POST">
+<input type="hidden" name="mkey" value="{{key}}">
+<button type="submit" class="btn btn-secondary btn-sm">X</button>
+</form>
+</td>
+{{/canRemove}}
+</tr>
+{{/machines}}
+</table>

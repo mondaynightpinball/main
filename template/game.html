@@ -1,0 +1,159 @@
+<script src="/numeral.min.js"></script>
+<script src="/hammer.min.js"></script>
+<script>{{> script}}</script>
+<img id="success" class="success-begin" src="/check-clear.png">
+
+<a href="/matches/{{key}}">{{name}}</a> : Rnd {{round}} : Game {{n}}
+<br>
+<span id="machine-label" class="norm"></span>
+<span id="edit-machine" class="edit">Editing...</span>
+{{#editable}}
+<a id="save-icon" class="edit-btn"><img src="/save.png" width="20" height="20"></a>
+<a id="edit-on"  class="edit-btn"><img src="/edit.png" width="20" height="20"></a>
+{{/editable}}
+<hr>
+{{#editable}}
+<table class="table">
+<tr>
+<td id="cell-left" style="display:none;">
+<a onclick="rotatePhoto(-90);return false;"><img src="/rotate_ccw.png" width="20" height="20"></a>
+</td>
+<td>
+<input type="file" id="photos" accept="image/*" onchange="preview(this.files);">
+</td>
+<td id="cell-right" style="display:none;">
+<a onclick="rotatePhoto(90);return false;"><img src="/rotate_cw.png" width="20" height="20"></a>
+</td>
+<!-- TEST controls -->
+<!--
+<td>
+<input type="text" id="zoom" maxlength="5" value="1.0" style="width:30px;">
+</td>
+-->
+
+</tr>
+</table>
+{{/editable}}
+
+<canvas id="canvas" style="display:none;"></canvas>
+
+<table id="scores">
+<tr>
+<td>
+  <span id="p1" class="norm"></span>
+  <span id="edit-p1" class="edit">edit-p1</span>
+</td>
+<td>&nbsp;</td>
+<td>
+  <span id="p2" class="norm"></span>
+  <span id="edit-p2" class="edit">edit-p2</span>
+</td>
+<td>&nbsp;</td>
+</tr>
+{{#shared}}
+<tr>
+<td>
+  <span id="p3" class="norm"></span>
+  <span id="edit-p3" class="edit">edit-p3</span>
+</td>
+<td>&nbsp;</td>
+<td>
+  <span id="p4" class="norm"></span>
+  <span id="edit-p4" class="edit">edit-p4</span>
+</td>
+<td>&nbsp;</td>
+</tr>
+{{/shared}}
+<tr>
+<!-- TODO Shared Scores -->
+<td id="s1" class="score">Player 1 Score</td>
+<td id="pnts1" class="points">0.0</td>
+<td id="s2" class="score">Player 2 Score</td>
+<td id="pnts2" class="points">0.0</td>
+</tr>
+
+{{#doubles}}
+<tr>
+<td>
+  <span id="p3" class="norm"></span>
+  <span id="edit-p3" class="edit">edit-p3</span>
+</td>
+<td>&nbsp;</td>
+<td>
+  <span id="p4" class="norm"></span>
+  <span id="edit-p4" class="edit">edit-p4</span>
+</td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td id="s3" class="score">Player 3 Score</td>
+<td id="pnts3" class="points">0.0</td>
+<td id="s4" class="score">Player 4 Score</td>
+<td id="pnts4" class="points">0.0</td>
+</tr>
+
+<!-- Sums row -->
+<tr class="text-xs-right sum-row">
+<!--
+<td style="text-align:right;"><span id="s13"></span></td>
+-->
+<td><span id="s13"></span></td>
+<td style="text-align:center;"><span id="p13"></span></td>
+<td><span id="s24"></span></td>
+<td style="text-align:center;"><span id="p24"></span></td>
+</tr>
+{{/doubles}}
+</table>
+
+<center>
+
+{{#editable}}
+<table id="keypad">
+<tr>
+<td class="num">1</td><td class="num">2</td><td class="num">3</td>
+</tr>
+<tr>
+<td class="num">4</td><td class="num">5</td><td class="num">6</td>
+</tr>
+<tr>
+<td class="num">7</td><td class="num">8</td><td class="num">9</td>
+</tr>
+<tr>
+<td class="num">000</td><td class="num">0</td><td class="num">&lt;-</td>
+</tr>
+</table>
+{{/editable}}
+
+<table>
+<tr>
+{{#prev}}
+<!--
+<td>
+<input type="button" value="PREV" onclick="navigate('{{&.}}');">
+</td>
+-->
+{{/prev}}
+<td>
+{{#editable}}
+<input type="button" class="mt-1 btn btn-sm btn-primary" id="save-btn" value="SAVE" onclick="sendChanges();">
+{{/editable}}
+</td>
+{{#next}}
+<!--
+<td>
+<input type="button" value="NEXT" onclick="navigate('{{&.}}');">
+</td>
+-->
+{{/next}}
+</tr>
+</table>
+</center>
+
+<div class="modal-cover">
+  <div class="modal-container">
+    <div>Saving...</div>
+    <div class="modal-content">
+      <div id="progress"></div>
+    </div>
+  </div>
+</div>

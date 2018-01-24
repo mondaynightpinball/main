@@ -1,0 +1,157 @@
+div { padding: 7px; }
+body {
+  background-image: url(skyline.jpg);
+  background-repeat: repeat-x;
+  background-color: black;
+  font-family: sans-serif;
+}
+#header ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+#header li {
+  float: left;
+}
+#header a:link, #header a:visited {
+  display: block;
+  width: 120px;
+  font-weight: bold;
+  color: #FFFFFF;
+  background-color: #008181;
+  text-align: center;
+  padding: 4px;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+#header a:hover, #header a:active {
+  background-color: #60a6a8;
+}
+#content {
+  background-color: white;
+  width: 95%;
+  max-width: 666px;
+  min-height: 420px;
+  margin: 0 auto;
+  padding: 2%;
+}
+#content ul, ol {
+  /*padding: 0;*/
+}
+/*
+TODO: Add different margin/class for wide screens.
+margin-left: 7px;
+*/
+#content a:link, #content a:visited {
+  color: #008181;
+  text-decoration: none;
+}
+#content a:hover, #content a:active {
+  color: #60a6a8;
+}
+.table th {
+  padding: 1px 3px 1px 3px;
+  vertical-align: bottom;
+  border-top: 0px;
+}
+.table td {
+  padding: 1px 3px 1px 3px;
+  vertical-align: middle;
+  border-top: 0px;
+}
+.header-row {
+  background-color: #008181;
+  color: white;
+  font-weight: bold;
+}
+.history-row {
+  cursor: pointer;
+}
+
+#top-bar {
+  position: fixed;
+  top: 0px;
+  padding-left: 50px;
+  background-color: #CCC;
+  width: 100%;
+  height: 40px;
+  z-index: 5;
+}
+#title {
+  text-transform: uppercase;
+}
+#title img {
+  margin-top: -6px;
+  margin-right: 3px;
+}
+
+.toggle-button {
+  position: fixed;
+  width: 44px;
+  height: 40px;
+  padding: 4px;
+  transition: .25s;
+  z-index: 15;
+}
+.toggle-button:hover {
+  cursor: pointer;
+}
+.toggle-button .menu-bar {
+  position: absolute;
+  border-radius: 2px;
+  padding: 0;
+  width: 80%;
+  transition: .5s;
+}
+.toggle-button .menu-bar-top {
+  height: 4px;
+  background-color: #555;
+  top: 7px;
+}
+.toggle-button .menu-bar-middle {
+  height: 4px;
+  background-color: #555;
+  margin-top: 7px;
+  margin-bottom: 7px;
+  top: 11px;
+}
+.toggle-button .menu-bar-bottom {
+  height: 4px;
+  background-color: #555;
+  top: 29px;
+}
+.button-open .menu-bar-top {
+  transform: rotate(45deg) translate(8px, 8px);
+  transition: .5s;
+}
+.button-open .menu-bar-middle {
+  transform: translate(230px);
+  transition: .1s ease-in;
+  opacity: 0;
+}
+.button-open .menu-bar-bottom {
+  transform: rotate(-45deg) translate(8px, -7px);
+  transition: .5s;
+}
+
+.menu-wrap {
+    background-color: #BBBBBB;
+    position: fixed;
+    top: 0;
+    height: 100%;
+    width: 280px;
+    margin-left: -280px;
+    font-size: 1em;
+    font-weight: 700;
+    overflow: auto;
+    transition: .25s;
+    z-index: 10;
+}
+.menu-show {
+    margin-left: 0;
+    box-shadow: 4px 2px 15px 1px #B9ADAD;
+}
+.menu {
+  margin-left: 9px;
+}

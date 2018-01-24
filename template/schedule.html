@@ -1,0 +1,36 @@
+<table class="table">
+{{#weeks}}
+{{#isSpecial}}
+<tr class="header-row">
+  <td colspan="3">SPECIAL EVENT ({{date}})</td>
+</tr>
+<tr>
+  <td colspan="3">{{&html}}</td>
+</tr>
+<tr>
+  <td colspan="3" class="text-xs-center pt-0 small" style="border-top: 0px;">{{venue.name}}</td>
+</tr>
+{{/isSpecial}}
+{{^isSpecial}}
+<tr class="header-row">
+  <td colspan="3">{{label}} ({{date}})</td>
+</tr>
+{{#matches}}
+<tr>
+<td class="text-xs-right">
+  {{#away_linked}}<a href="/teams/{{away_key}}">{{away_name}}</a>{{/away_linked}}
+  {{^away_linked}}{{away_name}}{{/away_linked}}
+</td>
+<td class="text-xs-center">@</td>
+<td>
+  {{#home_linked}}<a href="/teams/{{home_key}}">{{home_name}}</a>{{/home_linked}}
+  {{^home_linked}}{{home_name}}{{/home_linked}}
+</td>
+</tr>
+<tr>
+<td colspan="3" class="text-xs-center pt-0 small" style="border-top: 0px;">{{venue.name}}</td>
+</tr>
+{{/matches}}
+{{/isSpecial}}
+{{/weeks}}
+</table>

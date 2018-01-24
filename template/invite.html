@@ -1,0 +1,65 @@
+<h3>Sign Up</h3>
+<form action="/signup" method="POST">
+<input type="hidden" name="key" value="">
+{{#redirect_url}}
+<input type="hidden" name="redirect_url" value="{{.}}">
+{{/redirect_url}}
+<table>
+<tr>
+<td>Name:</td>
+<td>
+<input type="text" id="name" name="name" list="suggestions" onkeyup="nameChanged(event)" onchange="nameChanged(event);">
+<datalist id="suggestions">
+{{#sugs}}
+<option value="{{name}}">
+{{/sugs}}
+</datalist>
+</td>
+</tr>
+<tr>
+<td>Player Key:</td>
+<td>
+<input type="text" id="key" name="key"{{^isAdmin}} style="display:none;"{{/isAdmin}}>
+<div id="akey"{{#isAdmin}} style="display:none;"{{/isAdmin}}>auto-generated</div>
+</td>
+</tr>
+<tr>
+<td>Email:</td>
+<td><input type="email" name="email"></td>
+</tr>
+<tr>
+<td><input type="checkbox" name="send_invite" id="cbx"><label for="cbx">Send Invite</label></td>
+</tr>
+<tr>
+<td>Password:</td>
+<td><input type="password" name="pass"></td>
+</tr>
+<tr>
+<td>Confirm Password:</td>
+<td><input type="password" name="conf"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td><input type="submit" name="signup" value="Sign Up"></td>
+</tr>
+</table>
+
+<script>
+var players = {{&players}};
+
+function nameChanged(event) {
+  var name = document.getElementById('name').value;
+  for(var i = 0; i < players.length; i++) {
+    var p = players[i];
+    if(p.name == name) {
+      setKey(p.key);
+    }
+  }
+}
+
+function setKey(k) {
+  var el = document.getElementById('key');
+  el.value = k;
+}
+</script>
+

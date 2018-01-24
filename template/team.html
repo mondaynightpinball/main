@@ -1,0 +1,40 @@
+<table id="team_info">
+<tr><td>Name:</td><td style="font-weight: bold;">{{name}}</td></tr>
+<tr><td>Venue:</td><td>{{venue}}</td></tr>
+<tr><td>Captain:</td><td>{{captain}}</td></tr>
+<tr><td>Co-Captain:</td><td>{{co_captain}}</td></tr>
+<tr><td>&nbsp;</td></tr>
+</table>
+
+<table id="team_roster" class="table">
+<tr class="header-row">
+  <th>Roster ({{roster.length}} Players)</th>
+  <th>IFPA</th>
+  <th>M</th>
+  <th>PPM</th>
+  <th>POPS</th>
+</tr>
+{{#roster}}
+<tr>
+<!--
+  <td>{{#badge}}<img src="{{.}}" alt="{{rank}}" width="25" height="24">{{/badge}}</td>
+-->
+  <td><a href="/players/{{key}}">{{name}}</a></td>
+  <td class="text-xs-right">{{rank}}</td>
+  <td class="text-xs-right">{{num_matches}}</td>
+  <td>{{ppm}}</td>
+  <td>{{pops}}</td>
+</tr>
+{{/roster}}
+
+<table id="team_schedule" class="table">
+<tr><td colspan="4" class="header-row">Schedule</td></tr>
+{{#schedule}}
+<tr>
+  <td>Wk {{week}}</td>
+  <td>{{side}}</td>
+  <td><a href="/teams/{{opp.key}}">{{opp.name}}</a></td>
+  <td>{{#result}}<a href="/matches/{{key}}">{{.}}</a>{{/result}}</td>
+</tr>
+{{/schedule}}
+</table>

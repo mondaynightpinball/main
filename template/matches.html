@@ -1,0 +1,75 @@
+<!--
+<h3>Matches</h3>
+-->
+<nav class="navbar navbar-dark p-0" style="background-color:#008181;">
+  <div class="nav navbar-nav p-0">
+    {{#week_nums}}
+    <span id="tab-{{.}}" class="nav-item nav-link week-tab">&nbsp;{{.}}&nbsp;</span>
+    {{/week_nums}}
+  </div>
+</nav>
+
+{{#weeks}}
+<table id="week-{{n}}" class="table pane" style="display:none;">
+{{#boxes}}
+<tr class="table-active">
+<td>
+<a href="/matches/{{key}}">{{name}}</a>
+</td>
+{{#points.rounds}}
+<td class="text-xs-right">
+<a href="/matches/{{key}}?round={{n}}">{{n}}</a>
+</td>
+{{/points.rounds}}
+<td class="text-xs-right">B</td>
+<td class="text-xs-right pl-0">Total</td>
+</tr>
+<tr>
+<td>{{away.name}}</td>
+{{#points.rounds}}
+<td class="text-xs-right">{{away}}</td>
+{{/points.rounds}}
+<td class="text-xs-right">{{points.bonus.away}}</td>
+<td class="text-xs-right">{{points.away}}</td>
+</tr>
+<tr>
+<td>{{home.name}}</td>
+{{#points.rounds}}
+<td class="text-xs-right">{{home}}</td>
+{{/points.rounds}}
+<td class="text-xs-right">{{points.bonus.home}}</td>
+<td class="text-xs-right">{{points.home}}</td>
+</tr>
+<!-- <tr style="height:2px;background-color:#333"><td colspan="20"></td></tr> -->
+{{/boxes}}
+</table>
+{{/weeks}}
+
+{{#canCreate}}
+<hr>
+<div id="create-div">
+<form action="/matches/create">
+<input type="submit" name="create" value="New Match">
+</form>
+</div>
+{{/canCreate}}
+
+<script>
+function showPane(n) {
+console.log("showPane(" +n+ ")");
+  $('.week-tab').removeClass('active');
+  $('#tab-'+n).addClass('active');
+  $('.pane').hide();
+  $('#week-'+n).show();
+}
+
+$(document).ready(function() {
+console.log("ready...");
+  $('.week-tab').click(function(e) {
+    var n = $(this).text().trim();
+    showPane(n);
+  });
+
+  showPane('{{current}}');
+});
+</script>

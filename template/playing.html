@@ -1,0 +1,132 @@
+<!-- PLAYING -->
+{{> head}}
+
+<table class="table">
+<tbody id="games">
+</tbody>
+</table>
+<br>
+<table width="100%">
+{{#finished}}
+<tr>
+<td colspan="2">
+{{#left_confirmed}}
+Confirmed by<br>{{by}}
+{{/left_confirmed}}
+
+{{^left_confirmed}}
+
+{{#isLeftCaptain}}
+<form action="/matches/{{key}}/confirm" method="POST">
+<input name="left" type="submit" class="btn btn-sm btn-primary" value="  CONFIRM  ">
+</form>
+{{/isLeftCaptain}}
+{{^isLeftCaptain}}
+Reviewing...
+{{/isLeftCaptain}}
+
+{{/left_confirmed}}
+</td>
+<td colspan="2">
+{{#right_confirmed}}
+Confirmed by<br>{{by}}
+{{/right_confirmed}}
+
+{{^right_confirmed}}
+
+{{#isRightCaptain}}
+<form action="/matches/{{key}}/confirm" method="POST">
+<input name="right" type="submit" class="btn btn-sm btn-primary" value="  CONFIRM  ">
+</form>
+{{/isRightCaptain}}
+{{^isRightCaptain}}
+Reviewing...
+{{/isRightCaptain}}
+
+{{/right_confirmed}}
+</td>
+{{/finished}}
+</tbody>
+</table>
+
+<script>
+var games = {{&games}};
+var labels = {{&labels}};
+
+var chunk = '';
+
+function makeNum(v) {
+  if(!v) return 0;
+  if(v < 1000) return v;
+  var s = '' + v;
+  var n = s.length;
+  var b = '';
+
+  while(s.length > 0) {
+    var x;
+    if(s.length < 3) {
+      x = s;
+      s = '';
+    }
+    else {
+      x = s.substring(s.length-3,s.length);
+      s = s.substring(0,s.length-3);
+    }
+    if(b.length > 0) b = ',' + b;
+    b = x + b;
+  }
+  return b;
+}
+
+for(var i = 0; i < games.length; i++) {
+  var game = games[i];
+  var mname = labels[game.machine] || game.machine;
+  chunk += '<tr><td colspan="4">';
+  chunk += '<a href="/games/{{key}}.{{round}}.' +game.n+ '">';
+  //chunk += '#' +game.n+ ' ' +labels[game.machine]; //+ '<br>';
+  chunk += '#' +game.n+ ' ' +mname;
+  chunk += '</a>';
+  chunk += '</td></tr>';
+
+  chunk += '<tr>';
+  chunk += '<td colspan="2">' +labels[game.player_1]+ '</td>';
+  chunk += '<td colspan="2">' +labels[game.player_2]+ '</td>';
+  chunk += '</tr>';
+
+{{#shared}}
+  chunk += '<tr>';
+  chunk += '<td colspan="2">' +labels[game.player_3]+ '</td>';
+  chunk += '<td colspan="2">' +labels[game.player_4]+ '</td>';
+  chunk += '</tr>';
+{{/shared}}
+{{#doubles}}
+  chunk += '<tr>';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_1)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_1)+ '</td>';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_2)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_2)+ '</td>';
+  chunk += '</tr>';
+  chunk += '<tr>';
+  chunk += '<td colspan="2">' +labels[game.player_3]+ '</td>';
+  chunk += '<td colspan="2">' +labels[game.player_4]+ '</td>';
+  chunk += '</tr>';
+  chunk += '<tr>';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_3)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_3)+ '</td>';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_4)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_4)+ '</td>';
+  chunk += '</tr>';
+{{/doubles}}
+  var color = game.done ? '#9F8' : '#DDD';
+  chunk += '<tr style="background-color: ' +color+ ';font-weight: bold;">';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_13)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_13)+ '</td>';
+  chunk += '<td style="text-align:right;">' +makeNum(game.score_24)+ '</td>';
+  chunk += '<td>' +makeNum(game.points_24)+ '</td>';
+  chunk += '</tr>'
+}
+
+var el = document.getElementById('games');
+el.innerHTML = chunk + el.innerHTML;
+
+</script>

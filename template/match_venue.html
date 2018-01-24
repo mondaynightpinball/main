@@ -1,0 +1,34 @@
+{{>head}}
+<!--
+<h3>Venue</h3>
+-->
+{{#canEdit}}
+<div class="jumbotron">
+  <form action="/matches/{{match_id}}/venue/add" method="POST">
+  <input type="text" name="mkey" class="form-control" list="suggestions" placeholder="Machine Code">
+  <button type="submit" class="btn btn-primary btn-sm mt-1">ADD</button>
+  </form>
+</div>
+{{/canEdit}}
+
+<table class="table table-striped">
+{{#machines}}
+<tr>
+<td>{{name}}</td>
+{{#canEdit}}
+<td style="padding-top:5px;padding-bottom:5px;">
+<form action="/matches/{{match_id}}/venue/remove" method="POST">
+<input type="hidden" name="mkey" value="{{key}}">
+<button type="submit" class="btn btn-secondary btn-sm">X</button>
+</form>
+</td>
+{{/canEdit}}
+</tr>
+{{/machines}}
+</table>
+
+<datalist id="suggestions">
+{{#sugs}}
+<option value="{{key}}">{{name}}</option>
+{{/sugs}}
+</datalist>

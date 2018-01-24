@@ -1,0 +1,50 @@
+{{#error}}
+{{.}}
+{{/error}}
+<!--
+<h2>Login</h2>
+-->
+<form action="/login" method="POST">
+<input type="hidden" name="redirect_url" value="{{redirect_url}}">
+<div class="container">
+  <div class="form-group row">
+    <label for="username" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="username" name="username">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="password" class="col-sm-2 col-form-label">Password</label>
+    <div class="col-sm-10">
+      <input type="password" class="form-control" id="password" name="password">
+    </div>
+  </div>
+  <div class="form-group row">
+    <div class="offset-sm-5 col-sm-10">
+      <button type="submit" name="login" class="btn btn-primary">LOGIN</button>
+    </div>
+  </div>
+</div>
+
+<!--
+<table>
+<tr>
+<td>Email:</td>
+<td><input type="text" name="username" placeholder="Email"></td>
+</tr>
+<tr>
+<td>Password:</td>
+<td><input type="password" name="password"></td>
+</tr>
+<tr>
+<td>&nbsp;</td>
+<td>
+<input type="submit" value="LOGIN">
+</td>
+</tr>
+</table>
+-->
+
+</form>
+<br>
+<center>No account? No problem. <a href="/signup{{#redirect_url}}?redirect_url={{.}}{{/redirect_url}}">SIGN-UP</a></center>

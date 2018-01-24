@@ -1,0 +1,33 @@
+
+<table class="table table-striped">
+  <thead class="thead-default">
+    <tr class="header-row">
+      <td>&nbsp;</td>
+      <td>Player</td>
+      <td># Matches</td>
+      <td>PPM</td>
+      <td>POPS</td>
+    </tr>
+  </thead>
+<!--
+  <thead class="thead-default">
+    <tr>
+      <th>Player</th>
+      <th># Matches</th>
+      <th>PPM</th>
+      <th>POPS</th>
+    </tr>
+  </thead>
+-->
+  <tbody>
+  {{#players}}
+    <tr>
+      <td class="text-xs-center">{{n}}</td>
+      <td><a href="/players/{{key}}">{{name}}</a></td>
+      <td class="text-xs-center">{{num_matches}}</td>
+      <td>{{ppm}}</td>
+      <td>{{pops}}</td>
+    </tr>
+  {{/players}}
+  </tbody>
+</table>

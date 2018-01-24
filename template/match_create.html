@@ -1,0 +1,66 @@
+<h3>Create a new match</h3>
+{{#errors}}
+<span style="color:red;font-weight:bold;">{{.}}</span><br>
+{{/errors}}
+<form action="/matches/create" method="POST">
+<table>
+<tr>
+<td>Name:</td>
+<td><input type="text" name="match_name" maxlength="40"></td>
+</tr>
+<tr>
+<td>Week:</td>
+<td><input type="text" name="match_week" value="94"></td>
+</tr>
+<tr>
+<td>Key:</td>
+<td>
+<div id="match-key">auto-generated</div>
+<div id="edit-key" style="display:none;">
+  <input type="text" name="match_key">
+</div>
+</td>
+</tr>
+<tr>
+<td>Venue:</td>
+<td>
+<select name="venue">
+<option value="">Select Venue</option>
+{{#venues}}
+<option value="{{key}}">{{name}}</option>
+{{/venues}}
+</select>
+</td>
+</tr>
+<!--
+<tr>
+<td style="color: #666; font-style: italic; font-size: 0.75em">
+(optional)
+</td>
+</tr>
+-->
+
+<!--
+<tr>
+<td>Type:</td>
+<td>
+<input type="radio" name="type" value="auto" id="rd1" checked><label for="rd1">Auto-Draft</label><br>
+<input type="radio" name="type" value="manual" id="rd2"><label for="rd2">Manual</label>
+</td>
+</tr>
+-->
+
+<tr>
+<td>Away:</td>
+<td><input type="text" name="away"></td>
+</tr>
+<tr>
+<td>Home:</td>
+<td><input type="text" name="home"></td>
+
+<tr>
+<td>&nbsp;</td>
+<td><input type="submit" name="create" value="Create Match"></td>
+</tr>
+</table>
+</form>

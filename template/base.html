@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- META -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+<title>MondayNightPinball: {{title}}</title>
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.css">
+<link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous">
+<link href="/base.css" rel="stylesheet" />
+
+
+{{#style}}
+<style>
+{{.}}
+</style>
+{{/style}}
+
+</head>
+<body>
+
+<!-- TODO Remove the old header when the new menu is done -->
+<div id="header" style="min-height: 112px; vertical-align: middle; display: none;">
+<ul>
+<li><a href="/"><img src="/icon_128.png" width="96" height="96" /></a></li>
+
+  <!-- <li><a href="news.html">NEWS</a></li> -->
+  <li><a href="/">HOME</a></li>
+  <li><a href="/teams">TEAMS</a></li>
+  <li><a href="/schedule">SCHEDULE</a></li>
+  <li><a href="/standings">STANDINGS</a></li>
+  <li><a href="/matches">MATCHES</a></li>
+  <li><a href="/stats">STATS</a></li>
+  <li><a href="/venues">VENUES</a></li>
+  <li><a href="/machines">MACHINES</a></li>
+  <li><a href="/rules">RULES</a></li>
+  <li><a href="/signup">SIGN-UP</a></li>
+<!-- TODO: Swap LOGIN/LOGOUT based on whether someone is logged in or not. -->
+  <li><a href="/login{{#redirect_url}}?redirect_url={{.}}{{/redirect_url}}">LOGIN</a></li>
+  <li><a href="/profile">PROFILE</a></li>
+
+<!--
+  <li><a href="about.html">ABOUT</a></li>
+-->
+</ul>
+</div>
+
+<!-- TODO: Swap LOGIN/LOGOUT based on whether someone is logged in or not. -->
+
+<!--
+The following is a fairly good article on building a nav to change
+layout/behavior between mobile of wide. However, it relies on the
+:hover selector to expand/show the menu items, which is not useful
+on mobile. I feel that if we move the ul:hover to a different
+class, and use the toggle-button below to trigger that class
+on and off, that it might be pretty close to ideal.
+http://webdesignerwall.com/tutorials/css-responsive-navigation-menu
+-->
+
+<div class="nav-bar py-0">
+  <div class="btn-group">
+    <button class="btn btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      <img src="/icon_128.png" width="38" height="38" /><span class="px-1 text-uppercase">{{title}}</span>
+    </button>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="/">HOME</a>
+      <a class="dropdown-item" href="/teams">TEAMS</a>
+      <a class="dropdown-item" href="/schedule">SCHEDULE</a>
+      <a class="dropdown-item" href="/standings">STANDINGS</a>
+      <a class="dropdown-item" href="/matches">MATCHES</a>
+      <a class="dropdown-item" href="/stats">STATS</a>
+      <a class="dropdown-item" href="/venues">VENUES</a>
+      <a class="dropdown-item" href="/machines">MACHINES</a>
+      <a class="dropdown-item" href="/rules">RULES</a>
+      <a class="dropdown-item" href="/signup">SIGN-UP</a>
+      <a class="dropdown-item" href="/login{{#redirect_url}}?redirect_url={{.}}{{/redirect_url}}">LOGIN</a>
+      <a class="dropdown-item" href="/profile">PROFILE</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" integrity="sha384-3ceskX3iaEnIogmQchP8opvBy3Mi7Ce34nWjpBIwVTHfGYWQS9jwHDVRnpKKHJg7" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.3.7/js/tether.min.js" integrity="sha384-XTs3FgkjiBgo8qjEjBk0tGmf3wPrWtA6coPfQDfFEY8AnYJwjalXCiosYRBIBZX8" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/js/bootstrap.min.js" integrity="sha384-BLiI7JTZm+JWlgKa0M0kGRpJbF2J8q+qreVrKBC47e3K6BW78kGLrCkeRX6I9RoK" crossorigin="anonymous"></script>
+
+<div id="content">
+{{> content}}
+</div>
+<div style="color: white;">
+<center>
+&copy;2017 Monday Night Pinball
+</center>
+</div>
+
+<script>
+$(document).ready(function() {
+    var $toggleButton = $('.toggle-button'),
+        $menuWrap = $('.menu-wrap');
+
+    $toggleButton.on('click', function() {
+        $(this).toggleClass('button-open');
+        $menuWrap.toggleClass('menu-show');
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<form action="/signup" method="POST">
+{{#redirect_url}}
+<input type="hidden" name="redirect_url" value="{{.}}">
+{{/redirect_url}}
+
+<div class="container">
+  <div class="form-group row">
+    <label for="name" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="First Last">
+    </div>
+  </div>
+  <div class="form-group row">
+    <label for="email" class="col-sm-2 col-form-label">Email</label>
+    <div class="col-sm-10">
+      <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+    </div>
+  </div>
+
+  <div>
+    Where would you like to play? In your choice of locations, you may include
+    any location that has at least 8 machines, even if they don't have an MNP
+    team yet. That will help us gauge where the next expansion teams might go.
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="venue_1" name="venue_1" list="venues" placeholder="First Venue Choice">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="venue_2" name="venue_2" list="venues" placeholder="Second Venue Choice">
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <input type="text" class="form-control" id="venue_3" name="venue_3" list="venues" placeholder="Third Venue Choice">
+    </div>
+  </div>
+
+  <div>
+    Would you be interested in being a team captain?
+    <br><small>You need a minimum of 1 season played to be a captain.</small>
+  </div>
+
+  <div class="form-check">
+    <label class="form-check-label">
+      <input class="form-check-input" type="radio" name="captain" id="captain-yes" value="yes">
+      Yes, and I have played at least 1 season.
+    </label>
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">
+      <input class="form-check-input" type="radio" name="captain" id="captain-no" value="no">
+      No
+    </label>
+  </div>
+  <div class="form-check">
+    <label class="form-check-label">
+      <input class="form-check-input" type="radio" name="captain" id="captain-maybe" value="interested">
+      I'm interested, but I'm new to the league.
+    </label>
+  </div>
+
+
+  <div class="form-group row">
+    <div class="offset-sm-2 col-sm-10">
+      <button type="submit" class="btn btn-primary">SIGN UP</button>
+    </div>
+  </div>
+</div>
+
+<datalist id="venues">
+{{#venues}}
+<option value="{{name}}" />
+{{/venues}}
+</datalist>

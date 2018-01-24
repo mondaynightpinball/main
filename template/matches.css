@@ -1,0 +1,6 @@
+.week-tab {
+  cursor: pointer;
+}
+.current {
+  background-color: white;
+}

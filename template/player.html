@@ -1,0 +1,66 @@
+
+<table>
+  <tr>
+    <td>Name:</td>
+    <td><b>{{name}}</b></td>
+  </tr>
+  <!-- Team is not currently saved in player object
+  <tr>
+    <td>Team:</td>
+    <td><b>{{team}}</b></td>
+  </tr>
+  -->
+  <tr>
+    <td>Matches Played:</td>
+    <td><b>{{num_matches}}</b></td>
+  </tr>
+  <tr>
+    <td>Points Won:</td>
+    <td><b>{{points_won}}</b></td>
+  </tr>
+  <tr>
+    <td>Points Per Match:</td>
+    <td><b>{{ppm}}</b></td>
+  </tr>
+  <tr>
+    <td>Percent of Points (POPS):</td>
+    <td><b>{{pops}}</b></td>
+  </tr>
+  <tr>
+    <td>IFPA Rank:</td>
+    <td><b>{{ifpa_rank}}</b></td>
+  </tr>
+</table>
+
+<table class="table">
+  <tr class="header-row">
+    <td>Team</td>
+    <td>Vs</td>
+    <td>Wk</td>
+    <td>Rnd</td>
+    <td>On</td>
+    <td>PW</td>
+    <td>POPS</td>
+  </tr>
+{{#history}}
+  <tr class="history-row" data-url="{{&url}}">
+    <td>{{team}}</td>
+    <td>{{opp}}</td>
+    <td class="text-xs-center">{{week}}</td>
+    <td class="text-xs-center">{{round}}</td>
+    <td>{{machine}}</td>
+    <td>{{points}}</td>
+    <td>{{pops}}</td>
+  </tr>
+{{/history}}
+</table>
+
+
+<script>
+$(document).ready(function() {
+  $('.history-row').click(function(e) {
+    console.log("Clicked:",$(this).attr('data-url'));
+    window.location=$(this).attr('data-url');
+  });
+});
+</script>

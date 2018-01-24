@@ -1,0 +1,28 @@
+{
+  "name": "mondaynightpinball",
+  "version": "1.0.0",
+  "description": "Live scoring for Monday Night Pinball.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "cookie-parser": "^1.4.3",
+    "dotenv": "^4.0.0",
+    "express": "^4.14.0",
+    "google-auth-library": "^0.9.8",
+    "googleapis": "^12.4.0",
+    "moment": "^2.20.1",
+    "mongodb": "^2.2.4",
+    "morgan": "^1.7.0",
+    "mustache": "^2.2.1",
+    "superagent": "^3.6.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "gsimons",
+  "license": "ISC"
+}

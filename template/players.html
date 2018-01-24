@@ -1,0 +1,16 @@
+<h3>Players</h3>
+<table>
+<tr>
+<td>Lookup Player</td>
+</tr>
+<tr>
+<td>
+<input type="text" id="searchbox" list="suggestions">
+<datalist id="suggestions">
+{{#players}}
+<option value="{{key}}">{{name}}</option>
+{{/players}}
+</datalist>
+</td>
+</tr>
+</table>
