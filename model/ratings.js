@@ -6,10 +6,10 @@ const map = fs.readFileSync('data/IPR.csv').toString()
   .map(line => line.split(','))
   .reduce((m, row) => {
     const [ ipr, name ] = row;
-    m[name.toLowerCase()] = ipr;
+    m[name.trim().toLowerCase()] = ipr;
     return m;
   }, {});
 
 module.exports = {
-  forName: name => map[name.toLowerCase()]
+  forName: name => map[name.trim().toLowerCase()]
 };

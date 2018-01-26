@@ -1,10 +1,8 @@
-# Monday Night Pinball <sup>[![Version Badge][npm-version-svg]][package-url]</sup>
-
-[![License][license-image]][license-url]
+# Monday Night Pinball
 
 ## Summary
 
-As of January 23rd, 2018, the MNP main codebase is now open source.
+As of January 23rd, 2018, the MNP main codebase is now open source, under Gnu Public License (GPL).
 Visit the live site at: [https://www.mondaynightpinball.com](https://www.mondaynightpinball.com)
 
 ## Installation
@@ -28,6 +26,10 @@ mkdir data/stats
 
 # As a backup and log of events, we save all non-auth posts to a directory.
 mkdir data/posts
+
+# All image data is currently just saved on the server.
+# TODO: Save image data to a scalable storage service like AWS/S3
+mkdir uploads
 
 # You need season-# directories for any season you want to load.
 # See model/seasons.js
