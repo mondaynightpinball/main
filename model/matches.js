@@ -1079,14 +1079,14 @@ console.log("confirmScores():",params);
     callback(null,this);
   },
   isDone: function() {
-console.log("isDone(), rnd:" +this.round);
+// console.log("isDone(), rnd:" +this.round);
     //Do we need more rounds?
     if(this.round < 4) {
       return false;
     }
     var points = this.getPoints();
     var round = this.getRound();
-console.log("round.done:", round.done);
+// console.log("round.done:", round.done);
     if(this.round == 4) {
       if(round.done) {
         return (points.home != points.away);

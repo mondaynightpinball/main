@@ -1,3 +1,7 @@
+/**
+  mp-ratings is a client to pull ratings info from Matchplay.events
+*/
+
 const agent = require('superagent');
 const moment = require('moment');
 

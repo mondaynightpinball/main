@@ -14,7 +14,7 @@ var ids = require('../lib/ids');
 var machines = require('../model/machines');
 var venues = require('../model/venues');
 var matches = require('../model/matches');
-var ifpa = require('../model/ifpa');
+const IPR = require('../model/ratings');
 var players = require('../model/players');
 
 var base = fs.readFileSync('./template/base.html').toString();
@@ -394,7 +394,7 @@ function renderTeam(params) {
   var team = params.team;
   var perms = team.getPermissions(ukey);
 //console.log("renderTeam: ",team);
-console.log("renderTeam: state=" +match.state);
+// console.log("renderTeam: state=" +match.state);
   //TODO: Is this check really necessary anymore?
   // if(match.state != CONST.PREGAME) {
   //   perms = { canEdit: perms.canEdit };
@@ -405,29 +405,20 @@ console.log("renderTeam: state=" +match.state);
 
   var points = match.getPoints();
 
-  var top150 = '/top-150.png';
-  var top500 = '/top-500.png';
-  var top1000 = '/top-1000.png';
-
-  //TODO: ADD IFPA to lineup.
+  let teamRating = 0;
   var lineup = [];
   for(i in team.lineup) {
     var p = team.lineup[i];
-    var rank = ifpa.rank(p.name);
-    var badge = null;
-    if(rank > 0) {
-      if(rank < 150)       { badge = top150; }
-      else if(rank < 500)  { badge = top500; }
-      else if(rank < 1000) { badge = top1000;}
-    }
-// console.log(p.name,rank,badge);
+    const rating = IPR.forName(p.name.trim()) || 0;
+    // TODO: Handle cases where rating == undefined, instead of default to 0.
+    teamRating += parseInt(rating);
+
     lineup.push({
       key: p.key,
       name: p.name,
       num_played: p.num_played,
       sub: p.sub,
-      rank: rank,
-      badge: badge
+      rating
     });
   }
   lineup.sort(function(a, b) {
@@ -438,6 +429,7 @@ console.log("renderTeam: state=" +match.state);
     redirect_url: params.redirect_url || '/matches/' + match.key,
     title: params.label + ' Team',
     name: match.name,
+    team_rating: teamRating,
     key: match.key, //TODO: Maybe change to match_id
     venue: match.venue.name,
     ukey: ukey,

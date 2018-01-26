@@ -6,6 +6,9 @@
 <td>Team:</td>
 <td><a href="/teams/{{team.key}}">{{team.name}}</a></td>
 </tr>
+<tr>
+<td>Team Rating</td>
+<td>{{team_rating}}</td>
 </table>
 {{/team.key}}
 
@@ -23,22 +26,6 @@
   </div>
   <button type="submit" name="signup" class="btn btn-primary btn-sm">ADD PLAYER</button>
 </div>
-
-<!--
-<tr class="table-active">
-  <td>Name:</td>
-  <td><input type="text" name="name" list="suggestions"></td>
-</tr>
-<tr>
-  <td colspan="2">
-  <input type="checkbox" name="want_captain" id="chb1"><label for="chb1">Set as captain?</label>
-  </td>
-</tr>
-<tr>
-  <td>&nbsp;</td>
-  <td><input type="submit" value="ADD PLAYER"></td>
-</tr>
--->
 </form>
 {{/canAdd}}
 
@@ -67,17 +54,20 @@
 {{/captains}}
 </table>
 
+<span class="badge badge-primary">Lineup: {{lineup.length}} Players</span>
 <table class="table">
 <tr class="header-row">
-<td colspan="30">Lineup: {{lineup.length}} Players</td>
+<td class="text-xs-center">IPR</td>
+<td>Name</td>
+<td class="text-xs-center">Games</td>
+<td>&nbsp;</td>
 </tr>
 <!-- One row per player -->
 {{#lineup}}
 <tr>
-<td style="padding:1px;">{{#badge}}<img src="{{.}}" alt="{{rank}}" width="35" height="34">{{/badge}}</td>
+<td class="text-xs-center">{{rating}}</td>
 <td>{{name}}{{#sub}} (SUB){{/sub}}</td>
-<td>{{#num_played}}({{.}}){{/num_played}}</td>
-<!-- <td style="text-align:right;">{{rank}}</td> -->
+<td class="text-xs-center">{{#num_played}}({{.}}){{/num_played}}</td>
 {{#canRemove}}
 <td>
 <form action="/matches/{{match_id}}/players/remove" method="POST">

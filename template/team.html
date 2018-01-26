@@ -1,27 +1,25 @@
 <table id="team_info">
-<tr><td>Name:</td><td style="font-weight: bold;">{{name}}</td></tr>
+<tr><td>Name:</td><td><b>{{name}}</b></td></tr>
 <tr><td>Venue:</td><td>{{venue}}</td></tr>
 <tr><td>Captain:</td><td>{{captain}}</td></tr>
 <tr><td>Co-Captain:</td><td>{{co_captain}}</td></tr>
+<tr><td>Team Rating:</td><td><b>{{team_rating}}<b></td></tr>
 <tr><td>&nbsp;</td></tr>
 </table>
 
 <table id="team_roster" class="table">
 <tr class="header-row">
   <th>Roster ({{roster.length}} Players)</th>
-  <th>IFPA</th>
-  <th>M</th>
+  <th class="text-xs-center">IPR</th>
+  <th class="text-xs-center">M</th>
   <th>PPM</th>
   <th>POPS</th>
 </tr>
 {{#roster}}
 <tr>
-<!--
-  <td>{{#badge}}<img src="{{.}}" alt="{{rank}}" width="25" height="24">{{/badge}}</td>
--->
   <td><a href="/players/{{key}}">{{name}}</a></td>
-  <td class="text-xs-right">{{rank}}</td>
-  <td class="text-xs-right">{{num_matches}}</td>
+  <td class="text-xs-center">{{rating}}</td>
+  <td class="text-xs-center">{{num_matches}}</td>
   <td>{{ppm}}</td>
   <td>{{pops}}</td>
 </tr>
