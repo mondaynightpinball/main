@@ -107,12 +107,13 @@ console.log("loadSeason()",key,fn,season.key);
   return season;
 }
 
-var CURRENT = 'season-8';
+var CURRENT = 'season-9';
 
 var _map = {
   'season-6': loadSeason('season-6'),
   'season-7': loadSeason('season-7'),
-  'season-8': loadSeason(CURRENT)
+  'season-8': loadSeason('season-8'),
+  [CURRENT]: loadSeason(CURRENT)
 };
 
 module.exports = {
