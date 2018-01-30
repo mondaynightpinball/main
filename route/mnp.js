@@ -690,6 +690,7 @@ console.log("Using forming template");
       // h.sort(sf);
       a.sort(nameSort);
       h.sort(nameSort);
+      // TODO: Add team sums to pregame view
       var nr = Math.max(a.length, h.length);
       for(var i = 0; i < nr; i++) {
         var ac = i < a.length ?
@@ -704,9 +705,11 @@ console.log("Using forming template");
           h[i].sub ? ' (SUB)' : '' : '';
         rows.push({
           away: i < a.length ? ac + a[i].name + asub : '',
-          away_rank: i < a.length ? ifpa.rank(a[i].name) : 0,
+          // away_rank: i < a.length ? ifpa.rank(a[i].name) : 0,
+          away_rank: i < a.length ? IPR.forName(a[i].name) : 0,
           home: i < h.length ? hc + h[i].name + hsub : '',
-          home_rank: i < h.length ? ifpa.rank(h[i].name) : 0
+          // home_rank: i < h.length ? ifpa.rank(h[i].name) : 0
+          home_rank: i < h.length ? IPR.forName(h[i].name) : 0
         });
       }
       break;
