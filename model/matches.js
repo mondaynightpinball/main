@@ -382,7 +382,7 @@ console.log(this.players);
       //Determine if the player is a sub.
 
       // TODO: Fix any require race condition!
-      var seasons = require('../lib/seasons'); //Needed to delay the require.
+      var seasons = require('./seasons'); //Needed to delay the require.
 
       //console.log(seasons);
       // TODO: seasons.get() only gets current season. Should we compare against a season field in this?
