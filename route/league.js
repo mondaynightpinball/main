@@ -92,15 +92,15 @@ router.get('/stats',function(req,res) {
   res.send(html);
 });
 
-router.get('/rules',function(req,res) {
-  const template = fs.readFileSync('./template/rules2.html').toString();
-  const html = mustache.render(base,{
-    title: 'Rules'
-  },{
-    content: template
-  });
-  res.send(html);
-});
+// router.get('/rules',function(req,res) {
+//   const template = fs.readFileSync('./template/rules3.html').toString();
+//   const html = mustache.render(base,{
+//     title: 'Rules'
+//   },{
+//     content: template
+//   });
+//   res.send(html);
+// });
 
 router.get('/new-teams',function(req,res) {
   const template = fs.readFileSync('./template/call-for-teams.html').toString();
