@@ -96,6 +96,7 @@ module.exports = {
   //TODO: Q: Why does rank accept name instead of key?
   //      A: Because the key is not available all the time?
   rank: function(name) {
+    if(!name) return 0;
     var key = players.makeKey(name);
     var p = map[key];
     if(p) {

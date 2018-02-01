@@ -11,5 +11,5 @@ const map = fs.readFileSync('data/IPR.csv').toString()
   }, {});
 
 module.exports = {
-  forName: name => map[name.trim().toLowerCase()]
+  forName: name => name ? map[name.trim().toLowerCase()] : 0
 };

@@ -267,17 +267,19 @@ router.get('/players/:key',function(req,res) {
   // //TODO: Need something different than using players == users.
   // if(!p) { return res.redirect('/players'); }
 
+  const name = players.getName(req.params.key);
+
   //TODO: Might be nice to have team mapped.
   const st = stats.get(req.params.key);
   const html = mustache.render(base,{
     title: 'Player',
-    name: st.name,
+    name: name,
     num_matches: st.num_matches,
     points_won: st.points.won,
     ppm: st.ppm,
     pops: st.pops,
-    ifpa_rank: ifpa.rank(st.name),
-    ipr: IPR.forName(st.name.trim()) || 0,
+    ifpa_rank: ifpa.rank(name) || 'Unknown',
+    ipr: IPR.forName(name) || 'Unknown',
     history: st.history
   },{
     content: template
