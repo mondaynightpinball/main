@@ -65,8 +65,16 @@ console.log("No sugs file found: "+sname+ " Scanning players...");
 
 //TODO: load players from db? See hack at the bottom of the file.
 
+// HACK: This is a reverse hash for player keys.
+// TODO: This might possibly be insecure if we were relying on
+//       the 1 way nature of the hashing alg.
+const nameLookup = {};
+
 function makeKey(name) {
   var hash = util.digest(name.trim().toLowerCase());
+
+  nameLookup[hash] = name; // HACK
+
   return hash;
 }
 
@@ -110,9 +118,11 @@ console.log("sendVerify()... ");
 module.exports = {
   makeKey: makeKey,
   all: getAll,
-     //TODO: Should this involve a callback?
+  //TODO: Should this involve a callback?
   get: getPlayer,
-     //TODO: Change to use callback?
+  // TODO: getName is definitely kind of a hack, and illustrates how bad the old data system is.
+  getName: (key) => nameLookup[key] || 'MISSING KEY',
+   //TODO: Change to use callback?
   getByEmail: function(email) {
     if(!util.isEmail(email)) return;
     return this.getByField('email',email);
