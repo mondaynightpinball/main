@@ -18,7 +18,11 @@
 {{#roster}}
 <tr>
   <td><a href="/players/{{key}}">{{name}}</a></td>
-  <td class="text-xs-center">{{rating}}</td>
+  <td class="text-xs-center">
+    {{#rating}}
+    <span class="badge badge-{{rating}}">{{rating}}</span>
+    {{/rating}}
+  </td>
   <td class="text-xs-center">{{num_matches}}</td>
   <td>{{ppm}}</td>
   <td>{{pops}}</td>

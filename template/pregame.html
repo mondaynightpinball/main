@@ -13,8 +13,12 @@
 </tr>
 {{#rows}}
 <tr>
-<td>{{away_rank}} {{away}}</td>
-<td>{{home_rank}} {{home}}</td>
+<td>
+  <span class="badge badge-{{away_rank}}">{{away_rank}}</span> {{away}}
+</td>
+<td>
+  <span class="badge badge-{{home_rank}}">{{home_rank}}</span> {{home}}
+</td>
 </tr>
 {{/rows}}
 <tr>
