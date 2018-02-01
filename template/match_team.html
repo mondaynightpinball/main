@@ -54,7 +54,7 @@
 {{/captains}}
 </table>
 
-<span class="badge badge-primary">Lineup: {{lineup.length}} Players</span>
+Lineup: {{lineup.length}} Players
 <table class="table">
 <tr class="header-row">
 <td class="text-xs-center">IPR</td>
@@ -65,7 +65,11 @@
 <!-- One row per player -->
 {{#lineup}}
 <tr>
-<td class="text-xs-center">{{rating}}</td>
+<td class="text-xs-center">
+  {{#rating}}
+  <span class="badge badge-{{rating}}">{{rating}}</span>
+  {{/rating}}
+</td>
 <td>{{name}}{{#sub}} (SUB){{/sub}}</td>
 <td class="text-xs-center">{{#num_played}}({{.}}){{/num_played}}</td>
 {{#canRemove}}
