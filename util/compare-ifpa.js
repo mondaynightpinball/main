@@ -2,7 +2,7 @@
 
 var players = require('../model/players.js');
 
-var csv = require('./csv.js');
+var csv = require('../lib/csv.js');
 
 var rows1 = csv.load('./data/ifpa_num.csv');
 var rows2 = csv.load('./data/ifpa_official.csv');
