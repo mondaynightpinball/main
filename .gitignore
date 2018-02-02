@@ -9,3 +9,4 @@ tmp
 temp
 # Basically data. Should probably be moved under data anyways.
 results/
+static/match_summary
