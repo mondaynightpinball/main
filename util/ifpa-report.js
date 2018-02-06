@@ -15,7 +15,7 @@ const ifpa = fs.readFileSync('data/ifpa_num.csv').toString()
     return map;
   }, {});
 
-const pdb = fs.readFileSync('data/season-8/playerdb.csv').toString()
+const pdb = fs.readFileSync('data/season-9/playerdb.csv').toString()
   .split('\n')
   .filter(line => line.length > 0)
   .map(line => line.split(','))
