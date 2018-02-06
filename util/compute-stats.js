@@ -24,7 +24,7 @@ function format(num) {
   return str;
 }
 
-const rosters = fs.readFileSync('data/season-8/playerdb.csv').toString()
+const rosters = fs.readFileSync('data/season-9/playerdb.csv').toString()
 //.replace('\r', '')
 .split('\n')
 .filter(line => line.length > 0)

@@ -185,3 +185,20 @@ margin-left: 7px;
 .badge-1 {
   background-color: rgba(75,5,75,0.5);
 }
+
+.indent {
+  margin-left: 15px;
+}
+
+.indent::before {
+  content: "*";
+}
+
+.italic {
+  font-style: italic;
+}
+
+.links {
+  line-height: 2.2;
+  font-size: 1.2em;
+}
