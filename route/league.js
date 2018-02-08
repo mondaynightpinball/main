@@ -246,14 +246,11 @@ router.get('/teams/:team_id',function(req,res) {
   res.send(html);
 });
 
-// TODO: This route seems like a huge security hole, but it is a
-//       convenient way to lookup a player key by name.
 router.get('/players',function(req,res) {
-  const template = fs.readFileSync('./template/players.html').toString();
+  const template = fs.readFileSync('./template/lookup.html').toString();
 
   const html = mustache.render(base,{
-    title: 'Players',
-    players: players.all()
+    title: 'Players'
   },{
     content: template
   });
