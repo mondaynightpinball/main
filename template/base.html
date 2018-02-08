@@ -27,32 +27,6 @@
 </head>
 <body>
 
-<!-- TODO Remove the old header when the new menu is done -->
-<div id="header" style="min-height: 112px; vertical-align: middle; display: none;">
-<ul>
-<li><a href="/"><img src="/icon_128.png" width="96" height="96" /></a></li>
-
-  <!-- <li><a href="news.html">NEWS</a></li> -->
-  <li><a href="/">HOME</a></li>
-  <li><a href="/teams">TEAMS</a></li>
-  <li><a href="/schedule">SCHEDULE</a></li>
-  <li><a href="/standings">STANDINGS</a></li>
-  <li><a href="/matches">MATCHES</a></li>
-  <li><a href="/stats">STATS</a></li>
-  <li><a href="/venues">VENUES</a></li>
-  <li><a href="/machines">MACHINES</a></li>
-  <li><a href="/rules">RULES</a></li>
-  <li><a href="/signup">SIGN-UP</a></li>
-<!-- TODO: Swap LOGIN/LOGOUT based on whether someone is logged in or not. -->
-  <li><a href="/login{{#redirect_url}}?redirect_url={{.}}{{/redirect_url}}">LOGIN</a></li>
-  <li><a href="/profile">PROFILE</a></li>
-
-<!--
-  <li><a href="about.html">ABOUT</a></li>
--->
-</ul>
-</div>
-
 <!-- TODO: Swap LOGIN/LOGOUT based on whether someone is logged in or not. -->
 
 <!--
@@ -72,6 +46,7 @@ http://webdesignerwall.com/tutorials/css-responsive-navigation-menu
     </button>
     <div class="dropdown-menu">
       <a class="dropdown-item" href="/">HOME</a>
+      <a class="dropdown-item" href="/players/lookup">LOOKUP</a>
       <a class="dropdown-item" href="/teams">TEAMS</a>
       <a class="dropdown-item" href="/schedule">SCHEDULE</a>
       <a class="dropdown-item" href="/standings">STANDINGS</a>
