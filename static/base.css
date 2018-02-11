@@ -202,3 +202,23 @@ margin-left: 7px;
   line-height: 2.2;
   font-size: 1.2em;
 }
+
+.hidden {
+  display: none;
+}
+
+#serch {
+  position: relative;
+}
+
+#sugs {
+  padding: 0;
+  position: absolute;
+  background: #ddd;
+  z-index: 1;
+  cursor: pointer;
+}
+
+.stripe {
+  background: #b8b8b8;
+}
