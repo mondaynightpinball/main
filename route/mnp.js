@@ -325,7 +325,7 @@ router.get('/matches/:match_id/venue',function(req,res) {
     home_total: points.home,
     rounds: points.rounds,
     canEdit: auth,
-    sugs: machines.all()
+    sugs: JSON.stringify(machines.all())
   }, {
     head: head,
     content: template
