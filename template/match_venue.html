@@ -5,10 +5,45 @@
 {{#canEdit}}
 <div class="jumbotron">
   <form action="/matches/{{match_id}}/venue/add" method="POST">
-  <input type="text" name="mkey" class="form-control" list="suggestions" placeholder="Machine Code">
+  <input id="mkey" type="text" name="mkey" class="form-control" placeholder="Machine Code" autocomplete="off">
+  <div id="sugs" class="hidden">
+  </div>
   <button type="submit" class="btn btn-primary btn-sm mt-1">ADD</button>
   </form>
 </div>
+
+<script>
+const sugs = {{&sugs}};
+
+$(document).ready(function() {
+  $('#mkey').keyup((event) => {
+    const container = $('#sugs');
+    const q = event.target.value;
+    const lookup = q.toUpperCase();
+    const list = sugs.filter(m => {
+      // Allow matching by name or key.
+
+      return m.name.toUpperCase().includes(lookup) ||
+             m.key.toUpperCase().includes(lookup);
+    });
+    if(!q || q.length == 0 || list.length == 0) {
+      container.addClass('hidden');
+      return;
+    }
+    container.empty();
+    list.forEach((m, i) => {
+      const row = $(`<div>${m.name} (<b>${m.key}</b>)</div>`);
+      row.click(() => {
+        $('#mkey').val(m.key);
+        container.addClass('hidden');
+      });
+      if(i % 2 == 0) row.addClass('stripe');
+      container.append(row);
+    });
+    container.removeClass('hidden');
+  });
+});
+</script>
 {{/canEdit}}
 
 <table class="table table-striped">
@@ -26,9 +61,3 @@
 </tr>
 {{/machines}}
 </table>
-
-<datalist id="suggestions">
-{{#sugs}}
-<option value="{{key}}">{{name}}</option>
-{{/sugs}}
-</datalist>
