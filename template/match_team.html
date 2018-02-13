@@ -13,7 +13,7 @@
 {{/team.key}}
 
 {{#canAdd}}
-<form id="add_player" action="/matches/{{match_id}}/players/add" method="POST">
+<form action="/matches/{{match_id}}/players/add" method="POST">
 <input type="hidden" name="team" value="{{home_or_away}}">
 
 <div class="jumbotron">
