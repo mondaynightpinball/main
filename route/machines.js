@@ -53,4 +53,18 @@ router.post('/machines',function(req,res) {
   res.redirect('/machines');
 });
 
+router.post('/machines/:machine_key/remove',function(req,res) {
+  var ukey = req.user.key;
+  if(CONST.ROOT == ukey) {
+    machines.remove({
+      key: req.body.mkey
+    });
+
+    var check = machines.get(req.body.mkey);
+    console.log('check:',check);
+  }
+
+  res.redirect('/machines');
+});
+
 module.exports = router;

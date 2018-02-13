@@ -17,16 +17,50 @@
 <input type="hidden" name="team" value="{{home_or_away}}">
 
 <div class="jumbotron">
-  <input type="text" class="form-control" id="name" name="name" list="suggestions" placeholder="Player Name">
+  <div id="search">
+    <input type="text" class="form-control" id="name" name="name" placeholder="Player Name" autocomplete="off">
+    <div id="sugs" class="hidden">
+    </div>
+  </div>
   <div class="form-check">
     <label class="form-check-label">
       <input class="form-check-input" type="checkbox" name="want_captain">
       SET AS CAPTAIN
     </label>
   </div>
-  <button type="submit" name="signup" class="btn btn-primary btn-sm">ADD PLAYER</button>
+  <button type="submit" class="btn btn-primary btn-sm">ADD PLAYER</button>
 </div>
 </form>
+
+<script>
+const sugs = '{{&sugs}}'.split(',');
+
+$(document).ready(function() {
+  $('#name').keyup((event) => {
+    const container = $('#sugs');
+    const q = event.target.value;
+    const list = sugs.filter(name => {
+      return name.toUpperCase().includes(q.toUpperCase());
+    });
+    if(!q || q.length == 0 || list.length == 0) {
+      container.addClass('hidden');
+      return;
+    }
+    container.empty();
+    list.forEach((name, i) => {
+      const row = $('<div>' +name+ '</div>');
+      row.click(() => {
+        $('#name').val(name);
+        container.addClass('hidden');
+      });
+      if(i % 2 == 0) row.addClass('stripe');
+      container.append(row);
+    });
+    container.removeClass('hidden');
+  });
+});
+</script>
+
 {{/canAdd}}
 
 
@@ -97,9 +131,3 @@ Lineup: {{lineup.length}} Players
 {{#ready}}
 Team is ready...
 {{/ready}}
-
-<datalist id="suggestions">
-{{#sugs}}
-<option value="{{.}}">
-{{/sugs}}
-</datalist>
