@@ -452,7 +452,7 @@ function renderTeam(params) {
     canEdit: perms.canEdit,
     canRemove: perms.canRemove,
     canBegin: !team.ready && match.state == CONST.PREGAME && perms.canEdit && team.lineup.length > 7,
-    sugs: match.state == CONST.PREGAME ? JSON.stringify(players.getSuggestions(),null,2) : []
+    sugs: match.state == CONST.PREGAME ? JSON.stringify(players.getSuggestions(),null,2) : '[]'
   },{
     head: head,
     content: template
