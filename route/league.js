@@ -120,10 +120,12 @@ router.get('/teams',function(req,res) {
 
   for(k in season.teams) {
     const team = season.teams[k];
+    const venue = venues.get(team.venue);
     list.push({
       key: team.key,
       name: team.name,
-      venue: venues.get(team.venue).name
+      venue: venue ? venue.name : 'MISSING ' + team.venue,
+      // venue: venues.get(team.venue).name
     });
   }
 
