@@ -125,7 +125,6 @@ router.get('/teams',function(req,res) {
       key: team.key,
       name: team.name,
       venue: venue ? venue.name : 'MISSING ' + team.venue,
-      // venue: venues.get(team.venue).name
     });
   }
 
