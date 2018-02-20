@@ -51,7 +51,11 @@ var sugs = [];
 var sname = 'data/sugs.json';
 if(util.fileExists(sname)) {
 console.log("Loading sugs from " +sname+ "  ...");
-  sugs = JSON.parse(fs.readFileSync(sname));
+  try {
+    sugs = JSON.parse(fs.readFileSync(sname));
+  } catch (err) {
+    // We don't really care, the default is already set.
+  }
 }
 else {
 console.log("No sugs file found: "+sname+ " Scanning players...");
