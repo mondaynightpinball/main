@@ -3,6 +3,9 @@ var router = express.Router();
 var fs = require('fs');
 var mustache = require('mustache');
 
+// TODO: This could probably be renamed to matches,
+// or matches should be a folder that includes the parts of this router.
+
 console.log("INIT MNP...");
 
 // CONSTANTS AND LIBS

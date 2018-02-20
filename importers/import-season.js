@@ -17,7 +17,8 @@ for(let i in rows) {
     venue: row[1],
     name: row[2],
     roster: [],
-    schedule: []
+    schedule: [],
+    division: parseInt(row[3])
   };
 }
 

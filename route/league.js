@@ -3,6 +3,8 @@ const router = express.Router();
 const fs = require('fs');
 const mustache = require('mustache');
 
+// TODO: This router is too big. There should be a closer 1:1 relationship with models.
+
 const venues = require('../model/venues');
 const seasons = require('../model/seasons');
 const matches = require('../model/matches'); //For standings
