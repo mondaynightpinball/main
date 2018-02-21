@@ -3,6 +3,8 @@ const router = express.Router();
 const fs = require('fs');
 const mustache = require('mustache');
 
+// TODO: This router is too big. There should be a closer 1:1 relationship with models.
+
 const venues = require('../model/venues');
 const seasons = require('../model/seasons');
 const matches = require('../model/matches'); //For standings
@@ -28,11 +30,17 @@ router.get('/standings',function(req,res) {
   const template = fs.readFileSync('./template/standings.html').toString();
 
   const season = seasons.get(); //TODO Allow other seasons.
-  const rows = season.getStandings();
+
+  const divs = season.getStandings(); // { '1': [], '2': [] }
+
+  const divisions = Object.keys(divs).map(tier => ({
+    tier,
+    rows: divs[tier]
+  }));
 
   const html = mustache.render(base,{
     title: 'Standings',
-    rows: rows
+    divisions
   },{
     content: template
   });
@@ -56,7 +64,6 @@ router.get('/schedule',function(req,res) {
   });
 
   res.send(html);
-
 });
 
 router.get('/stats',function(req,res) {

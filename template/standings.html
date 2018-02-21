@@ -1,11 +1,9 @@
-<div class="jumbotron">
-  Coming soon...
-</div>
 
-<!--
+{{#divisions}}
+<b>Tier: {{tier}}</b>
 <table class="table">
 <tr class="header-row">
-  <td>#</td>
+  <td class="text-xs-center">#</td>
   <td>Team</td>
   <td class="text-xs-center">W</td>
   <td class="text-xs-center">L</td>
@@ -13,7 +11,7 @@
 </tr>
 {{#rows}}
 <tr>
-  <td class="text-xs-right">{{n}}</td>
+  <td class="text-xs-center">{{n}}</td>
   <td><a href="/teams/{{key}}">{{name}}</a></td>
   <td class="text-xs-center">{{wins.length}}</td>
   <td class="text-xs-center">{{losses.length}}</td>
@@ -21,4 +19,4 @@
 </tr>
 {{/rows}}
 </table>
--->
+{{/divisions}}

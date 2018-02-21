@@ -17,7 +17,9 @@ for(let i in rows) {
     venue: row[1],
     name: row[2],
     roster: [],
-    schedule: []
+    schedule: [],
+    // Not sure what to default, but want to avoid uncaught error.
+    division: parseInt(row[3] || 0)
   };
 }
 
