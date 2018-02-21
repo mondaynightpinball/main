@@ -30,11 +30,8 @@ router.get('/standings',function(req,res) {
   const template = fs.readFileSync('./template/standings.html').toString();
 
   const season = seasons.get(); //TODO Allow other seasons.
-  // const rows = season.getStandings();
 
-  // TODO: Seems like maybe a season could have divisions,
-  //       with each division behaving like an old season.
-  const divs = season.getStandings();
+  const divs = season.getStandings(); // { '1': [], '2': [] }
 
   const divisions = Object.keys(divs).map(tier => ({
     tier,
@@ -43,7 +40,6 @@ router.get('/standings',function(req,res) {
 
   const html = mustache.render(base,{
     title: 'Standings',
-    // rows: rows
     divisions
   },{
     content: template
@@ -68,7 +64,6 @@ router.get('/schedule',function(req,res) {
   });
 
   res.send(html);
-
 });
 
 router.get('/stats',function(req,res) {

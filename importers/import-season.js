@@ -18,7 +18,8 @@ for(let i in rows) {
     name: row[2],
     roster: [],
     schedule: [],
-    division: parseInt(row[3])
+    // Not sure what to default, but want to avoid uncaught error.
+    division: parseInt(row[3] || 0)
   };
 }
 
