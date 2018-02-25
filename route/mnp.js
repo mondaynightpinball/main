@@ -116,7 +116,7 @@ router.get('/matches/create',function(req,res) {
 });
 
 router.post('/matches/create',function(req,res) {
-console.log("POST /matches/create",req.body);
+  console.log("POST /matches/create",req.body);
 
   var name = req.body.match_name || '';
   if(name.length == 0) {
@@ -128,9 +128,11 @@ console.log("POST /matches/create",req.body);
     //Make up a key from the name.
     key = name.trim().toLowerCase().replace(/ /g,'-').replace(/[^a-z0-9\-]/g,'');
     key = key + '-' + ids.create().substring(0,3);
-    //key = name.trim().toLowerCase().replace(/ /g,'-')+'-'+ids.create().substring(0,3);
   }
 
+  // TODO: Try to determine the current week, if a season is in progress.
+  //       There is a weird template issue where any S matches will take over the
+  //       default panel.
   var week = req.body.match_week || 'S';
 
   var ukey = req.user.key;
@@ -149,9 +151,9 @@ console.log("POST /matches/create",req.body);
     type: req.body.type
   }, function(match) {
 
-//If error, sendCreate with the error(s)
+    // TODO If error, sendCreate with the error(s)
 
-console.log(match);
+    console.log('CREATED:', match);
     res.redirect('/matches/'+key);
   });
 });
@@ -196,8 +198,8 @@ console.log(req.body);
 });
 
 router.post('/matches/:match_id/ready',function(req,res) {
-console.log("POST /matches READY...");
-console.log(req.body);
+  console.log("POST /matches READY...");
+  console.log(req.body);
   var match = matches.get(req.params.match_id);
   if(!match) { return res.redirect('/matches'); }
 
@@ -213,37 +215,11 @@ console.log(req.body);
 
 });
 
-router.post('/matches/:match_id/begin',function(req,res) {
-console.log("POST begin");
-  var match = matches.get(req.params.match_id);
-  if(!match) { return res.redirect('/matches'); }
-
-  var ukey = req.user.key;
-
-  match.begin({ukey: ukey},function(err,m) {
-    if(err) { console.log(err); }
-    res.redirect('/matches/'+req.params.match_id);
-  });
-});
-
-router.post('/matches/:match_id/draft',function(req,res) {
-console.log("POST draft");
-  var match = matches.get(req.params.match_id);
-  if(!match) { return res.redirect('/matches'); }
-
-  match.conductDraft({
-    ukey: req.user.key
-  }, function(err,m) {
-    if(err) console.log(err);
-    res.redirect('/matches/'+req.params.match_id);
-  });
-});
-
 router.post('/matches/:match_id/picks',function(req,res) {
   var match = matches.get(req.params.match_id);
   if(!match) { return res.redirect('/matches'); }
-console.log("POST picks...");
-console.log(req.body);
+  console.log("POST picks...");
+  console.log(req.body);
 
   var state = req.body.state;
   delete req.body.state;
@@ -267,20 +243,6 @@ console.log(req.body);
     else {
       res.redirect('/matches/'+req.params.match_id);
     }
-  });
-});
-
-router.post('/matches/:match_id/delete',function(req,res) {
-console.log("POST /matches delete!");
-  matches.remove({
-    ukey: req.user.key,
-    key: req.params.match_id
-  }, function(err,match) {
-    if(err) console.log(err);
-    if(match) {
-      console.log("...REMOVED " +req.params.match_id);
-    }
-    res.redirect('/matches');
   });
 });
 
@@ -396,12 +358,6 @@ function renderTeam(params) {
   var match = params.match;
   var team = params.team;
   var perms = team.getPermissions(ukey);
-//console.log("renderTeam: ",team);
-// console.log("renderTeam: state=" +match.state);
-  //TODO: Is this check really necessary anymore?
-  // if(match.state != CONST.PREGAME) {
-  //   perms = { canEdit: perms.canEdit };
-  // }
 
   var template = fs.readFileSync('./template/match_team.html').toString();
   var head = fs.readFileSync('./template/match_head.html').toString();
@@ -484,10 +440,8 @@ console.log(req.body);
 });
 */
 
-// =------- REGISTRATION HANLDERS --------=
-
 router.post('/matches/:match_id/players/remove',function(req,res) {
-console.log("POST REMOVE");
+  console.log("POST REMOVE");
   var match = matches.get(req.params.match_id);
   if(!match) { return res.redirect('/matches'); }
 
@@ -506,7 +460,7 @@ console.log("POST REMOVE");
 });
 
 router.post('/matches/:match_id/players/add',function(req,res) {
-console.log("POST matches ADD player");
+  console.log("POST matches ADD player");
   var match = matches.get(req.params.match_id);
   if(!match) { return res.redirect('/matches'); }
 
@@ -524,30 +478,6 @@ console.log("POST matches ADD player");
     res.redirect('/matches/' +req.params.match_id+ t);
   });
 });
-
-router.post('/matches/:match_id/players/join',function(req,res) {
-console.log("POST",req.path);
-  var match = matches.get(req.params.match_id);
-  if(!match) { return res.redirect('/matches'); }
-
-  var ukey = req.user.key;
-  if(!ukey || ukey == 'ANON') {
-    var rurl = '/matches/'+req.params.match_id;
-console.log("Bumping unknown user to login: " +rurl);
-    return res.redirect('/login?redirect_url=' +rurl);
-  }
-
-  match.join({
-    ukey: ukey,
-    want_captain: req.body.want_captain
-  } ,function(err,player) {
-    if(err) {
-      console.log(err);
-    }
-    res.redirect('/matches/'+req.params.match_id);
-  });
-});
-// =------- END REGISTRATION HANLDERS --------=
 
 router.get('/matches/:match_id',function(req,res) {
   //TODO: matches.get should be async to account for mongo.
@@ -670,27 +600,14 @@ console.log("Using playing template");
       template = fs.readFileSync('./template/playing.html').toString();
       games = JSON.stringify(games);
       break;
-    case CONST.REGISTERING:
-console.log("Using registration template");
-      template = fs.readFileSync('./template/registration.html').toString();
-      break;
     case CONST.SCHEDULED:
       template = fs.readFileSync('./template/scheduled.html').toString();
       break;
     case CONST.PREGAME:
-console.log("Using forming template");
       template = fs.readFileSync('./template/pregame.html').toString();
       //TODO: We should sort the captains to the top.
-      // var sf = function(a,b) {
-      //   var trick = [a.name,b.name];
-      //   trick.sort();
-      //   if(trick[0] == a.name) return -1;
-      //   else return 1; //Would I ever care about them being equal?
-      // };
       var a = match.away.lineup;
       var h = match.home.lineup;
-      // a.sort(sf);
-      // h.sort(sf);
       a.sort(nameSort);
       h.sort(nameSort);
       // TODO: Add team sums to pregame view
@@ -708,24 +625,9 @@ console.log("Using forming template");
           h[i].sub ? ' (SUB)' : '' : '';
         rows.push({
           away: i < a.length ? ac + a[i].name + asub : '',
-          // away_rank: i < a.length ? ifpa.rank(a[i].name) : 0,
           away_rank: i < a.length ? IPR.forName(a[i].name) : 0,
           home: i < h.length ? hc + h[i].name + hsub : '',
-          // home_rank: i < h.length ? ifpa.rank(h[i].name) : 0
           home_rank: i < h.length ? IPR.forName(h[i].name) : 0
-        });
-      }
-      break;
-    case CONST.DRAFTING:
-console.log("Using drafting template");
-      template = fs.readFileSync('./template/drafting.html').toString();
-      var a = match.away.lineup;
-      var h = match.home.lineup;
-      var nr = Math.max(a.length, h.length);
-      for(var i = 0; i < nr; i++) {
-        rows.push({
-          away: i < a.length ? a[i].name : '',
-          home: i < h.length ? h[i].name : ''
         });
       }
       break;

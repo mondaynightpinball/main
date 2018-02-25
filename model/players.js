@@ -55,6 +55,7 @@ console.log("Loading sugs from " +sname+ "  ...");
     sugs = JSON.parse(fs.readFileSync(sname));
   } catch (err) {
     // We don't really care, the default is already set.
+    console.log("Error reading sugs", err);
   }
 }
 else {

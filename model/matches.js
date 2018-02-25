@@ -204,21 +204,17 @@ function getDate(t) {
 }
 
 function Match(params) {
-// console.log("********** NEW MATCH *******************");
-// console.log(params);
   this.key = params.key;
   this.name = params.name;
+  // TODO: type is deprecated
   this.type = params.type || 'manual';
   this.week = params.week || 'Scrimmage';
   this.round = 1;
   this.create_at = Date.now();
   this.date = params.date || getDate();
   this.state = params.state || CONST.PREGAME;
-//console.log("params.venue:",params.venue);
   var vk = params.venue ? params.venue.key ? params.venue.key : params.venue : null;
-  // var venue = params.venue ? venues.get(params.venue.key) : null;
   var venue = vk ? venues.get(vk) : null;
-// console.log("venue:",vk,venue);
   if(!venue) {
     venue = {
       key: 'venue-'+params.key,
@@ -254,7 +250,7 @@ Match.prototype = {
   // --------------- REMOVE PLAYER ----------------------------
   remove: function(params,callback) {
     var callback = callback || function() {};
-console.log("remove():",params);
+    console.log("remove():",params);
     var ukey = params.ukey;
     var team;
     if(params.team && params.team == 'home') team = this.home;
@@ -292,42 +288,10 @@ console.log("remove():",params);
     }
     return callback("ERROR: Did not find target to remove");
   },
-  // ------------------ JOIN MATCH -------------------------------
-  // This is only used for match.type='auto', but even then we maybe
-  // should just have the match admin add players instead of allowing
-  // players to join.
-  join: function(params,callback) {
-    var callback = callback || function() {};
-    var ukey = params.ukey;
-    var want_captain = params.want_captain;
-
-    var auth = ukey != 'ANON';
-    if(!auth) { return callback("ERROR: Not logged in"); }
-
-console.log("match.join ukey: " +ukey);
-console.log(this.players);
-
-    var p = listGet(this.players,ukey);
-    if(!p) {
-      p = players.get(ukey);
-      if(!p) { return callback("ERROR: Player doesn't exist " +ukey); }
-      var player = {
-        name: p.name,
-        key: p.key,
-        ifpa_num: p.ifpa_num,
-        confirmed: true //Not sure if I should really do this!!!
-      };
-      p = player;
-      this.players.push(p);
-    }
-    p.wants_captain = want_captain;
-    this.save();
-    callback(null,p);
-  },
   // ----------------- ADD PLAYER ---------------------------------
   add: function(params,callback) {
     var callback = callback || function() {};
-//console.log("add player...\n",params);
+    //console.log("add player...\n",params);
     var ukey = params.ukey;
     var team;
     if(params.team && params.team == 'home') team = this.home;
@@ -429,97 +393,9 @@ console.log(this.players);
     this.save();
     callback(null,this);
   },
-  // ------------------ CONDUCT DRAFT ------------------------------------------
-  //TODO: This method should be moved out, because it's just a
-  //      custom factory of sorts to allow for automatic draft.
-  conductDraft: function(params,callback) {
-    var ukey = params.ukey;
-    //Who is allowed to conduct the draft?
-    if(ukey != CONST.ROOT) {
-      return callback("ERROR: " +ukey+ " not authorized to conduct draft.");
-    }
-
-    if(this.state != CONST.DRAFTING) {
-      return callback("ERROR: Match is not in DRAFTING state.");
-    }
-
-    //TODO: Someday we should have different types of drafts.
-    //	    For now, it's an auto draft.
-    if(this.players.length < 16) {
-      return callback("ERROR: Not enough players to start the draft.");
-    }
-
-    //TODO: Matches should have directors, which is a step below admin, and a step above captains.
-
-    //Q: What if there aren't enough captains?
-    //A: For now, I'm going to callback with an error.
-    var caps = [];
-    for(i in this.players) {
-      var p = this.players[i];
-      if(p.wants_captain) caps.push(p);
-    }
-console.log(caps.length,"people want captain");
-
-    if(caps.length < 2) {
-      return callback("ERROR: Not enough captains to start a match.");
-    }
-
-    var available = this.players.slice(0);
-
-//console.log("caps:",caps);
-//console.log("available: ",available);
-
-    var a = { name: 'Away Team', captains: [], lineup: [] };
-    var h = { name: 'Home Team', captains: [], lineup: [] };
-
-    //Select the first captain, who will be away and pick first.
-    var n = caps.length;
-    var index = Math.floor(n * Math.random());
-    var captain = caps[index];
-    caps.splice(index,1); //Remove the option.
-    a.captains.push(captain);
-    a.lineup.push(captain);
-    var x = available.indexOf(captain); //Will this work???
-    available.splice(x,1);
-    console.log("Away captain is: ", captain);
-
-    //Select the second captain, who will be home and pick second.
-    n = caps.length;
-    index = Math.floor(n * Math.random());
-    captain = caps[index];
-    caps.splice(index,1); //Remove the option.
-    h.captains.push(captain);
-    h.lineup.push(captain);
-    x = available.indexOf(captain); //Will this work???
-    available.splice(x,1);
-    console.log("Home captain is: ", captain);
-
-    var pick = 0;
-    while(available.length > 0) {
-      n = available.length;
-      index = Math.floor(n * Math.random());
-      var p = available[index];
-      available.splice(index,1);
-      var team = (pick % 2 == 0) ? a : h;
-      team.lineup.push(p);
-      pick++;
-//console.log("pick ",pick," by ",team.name," is ",p);
-    }
-
-    this.home.name     = h.name;
-    this.home.captains = h.captains;
-    this.home.lineup   = h.lineup;
-
-    this.away.name     = a.name;
-    this.away.captains = a.captains;
-    this.away.lineup   = a.lineup;
-
-    this.save();
-    callback(null,this);
-  },
   // -------------- ADD MACHINE -------------------------------
   addMachine: function(params,callback) {
-console.log("addMachine()",params);
+    console.log("addMachine()",params);
     var ukey = params.ukey;
     var auth = this.home.hasCaptain(ukey) ||
                this.away.hasCaptain(ukey);
@@ -533,7 +409,7 @@ console.log("addMachine()",params);
   },
   // ---------------  REMOVE MACHINE ------------------------------
   removeMachine: function(params,callback) {
-console.log("removeMachine()",params);
+    console.log("removeMachine()",params);
     var ukey = params.ukey;
     var auth = this.home.hasCaptain(ukey) ||
                this.away.hasCaptain(ukey);
@@ -546,40 +422,10 @@ console.log("removeMachine()",params);
     callback(null,this);
 
   },
-  // ---------------   BEGIN MATCH -----------------------------
-  begin: function(params,callback) {
-    var ukey = params.ukey;
-    if(ukey != CONST.ROOT) { return callback("ERROR: Not a tournament director. Cannot begin."); }
-
-    //OK Let's see where we are:
-    if(this.state == CONST.REGISTERING) {
-      //We need to draft and then punt it back to the user(s).
-      this.state = CONST.DRAFTING;
-      return this.conductDraft(params, callback);
-    }
-    else if(this.state == CONST.DRAFTING) {
-      //Make all the checks to see if we can really start.
-      if(this.home.captains.length == 0) return callback("ERROR: No Home captains.");
-      if(this.away.captains.length == 0) return callback("ERROR: No Away captains.");
-      if(this.home.lineup.length < 8) return callback("ERROR: Not enough home players.");
-      if(this.away.lineup.length < 8) return callback("ERROR: Not enough away players.");
-
-      //TODO: Venue acceptable? Enough machines?
-
-      //TODO: We could also move to captain based draft instead of auto.
-      this.home.ready = true;
-      this.away.ready = true;
-      this.round = 1;
-      this.state = CONST.PICKING;
-    }
-
-    this.save();
-    callback(null, this);
-  },
   // ------------------- CONFIRM LINEUP --------------------------
   confirmLineup: function(params,callback) {
-console.log("confirmLineup()...");
-console.log(params);
+    console.log("confirmLineup()...");
+    console.log(params);
     var side = params.side || '';
     var ukey = params.ukey;
     var team;
@@ -612,8 +458,8 @@ console.log(params);
   },
   // -------------------- TEAM READY ------------------------------
   teamReady: function(params,callback) {
-console.log("teamReady()...");
-//console.log(params);
+    console.log("teamReady()...");
+    //console.log(params);
     var side = params.side || '';
     var ukey = params.ukey;
     var team;
@@ -645,6 +491,7 @@ console.log("teamReady()...");
     return round.games[n-1];
   },
   // ----------------- WHO PICKS/PLAYS FIRST? ------------------
+  // TODO: getOrder and getPickingTeam are where tie breaker rounds fall apart.
   getOrder: function(round) {
     var round = round || this.round;
     if(round == 1) return [this.away, this.home];
@@ -723,7 +570,7 @@ console.log("teamReady()...");
       var addMachine = function(m) {
         if(!m || m.length == 0) return false;
         // if(machines.indexOf(m) >= 0) {
-//console.log("Duplicate Machine: " + m);
+        //console.log("Duplicate Machine: " + m);
           //TODO: The following is only an error if there are enough machines.
           //      We would need to pull up the venue and see what machines are in.
           //      BUT, just like we have virtual team objects for every match,
@@ -755,7 +602,7 @@ console.log("teamReady()...");
         }
       }
 
-console.log("state:",this.state,"picksReady:",picksReady);
+      console.log("state:",this.state,"picksReady:",picksReady);
 
       if(this.state == CONST.PICKING) {
         if(picksReady) this.state = CONST.RESPONDING;
@@ -837,7 +684,6 @@ console.log("state:",this.state,"picksReady:",picksReady);
     }
     var hb = this.home.getBonusPoints();
     var ab = this.away.getBonusPoints();
-//console.log("bonus, home:",hb,"away:",ab);
     points.bonus = {
       home: hb,
       away: ab
@@ -882,8 +728,7 @@ console.log("state:",this.state,"picksReady:",picksReady);
     return auth;
   },
   reportScores: function(params,callback) {
-console.log("reportScores(): ",params);
-//console.log("reportScores(): ");
+    console.log("reportScores(): ",params);
     var ukey = params.ukey;
     var r = params.round;
     var n = params.n;
@@ -985,9 +830,9 @@ console.log("reportScores(): ",params);
 
     if(roundDone(round)) {
       //Check to see if the match is done?
-//      if(r == this.round) {
-//        this.state = CONST.REVIEWING;
-//      }
+      // if(r == this.round) {
+      //   this.state = CONST.REVIEWING;
+      // }
     }
     else {
       //We don't need to change round or state, since we are
@@ -1000,7 +845,7 @@ console.log("reportScores(): ",params);
     callback(null,this);
   },
   confirmScores: function(params,callback) {
-console.log("confirmScores():",params);
+    console.log("confirmScores():",params);
     var ukey = params.ukey;
     var order = this.getOrder();
     var left = order[0];
@@ -1078,15 +923,14 @@ console.log("confirmScores():",params);
     this.save();
     callback(null,this);
   },
+  /** Method to see if a match is complete. */
   isDone: function() {
-// console.log("isDone(), rnd:" +this.round);
     //Do we need more rounds?
     if(this.round < 4) {
       return false;
     }
     var points = this.getPoints();
     var round = this.getRound();
-// console.log("round.done:", round.done);
     if(this.round == 4) {
       if(round.done) {
         return (points.home != points.away);
@@ -1103,6 +947,8 @@ console.log("confirmScores():",params);
   }
 };
 
+// TODO: Replace, or at least move calcPoints with module.
+//       In theory, there should be a Game class with a getPoints method.
 function calcPoints(game, round) {
   // console.log("calcPoints() game:", game, " round:", round);
   if(round == 1 || round == 4) {
