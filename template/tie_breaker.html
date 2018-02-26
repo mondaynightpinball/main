@@ -1,0 +1,123 @@
+<!-- TIE-BREAKER -->
+{{> head}}
+{{#errors}}
+<span style="color:red;font-weight:bold;">{{.}}</span><br>
+{{/errors}}
+
+<b>Step: {{step}} - {{team_name}} Picking</b>
+
+{{#editable}}
+<form action="/matches/{{key}}/picks" method="POST">
+<input type="hidden" name="state" value="tie-breaker">
+<input type="hidden" name="round" value="{{round}}">
+{{/editable}}
+
+<table class="table">
+<tbody id="games">
+</tbody>
+</table>
+
+{{#editable}}
+<center>
+<input type="submit" class="btn btn-sm btn-primary" value="SUBMIT">
+</center>
+</form>
+{{/editable}}
+
+<script>
+var machines = {{&machines}};
+var games = {{&games}};
+var lineup = {{&lineup}};
+var labels = {{&labels}};
+var step = {{&step}};
+
+var players = [];
+for(k in lineup) {
+  var np = lineup[k].num_played;
+  var npl = np > 0 ? '(' +np+ ') ' : '';
+  players.push({
+    value: lineup[k].key,
+    label: npl + lineup[k].name
+  });
+}
+
+function makeSelect(name, hint, options, selected) {
+  var html = '<select name="' +name+ '" class="custom-select">'+
+             '<option value="">' +hint+ '</option>';
+  for(var i = 0; i < options.length; i++) {
+    var opt = options[i];
+    var value = opt.value || opt;
+    var label = opt.label || labels[opt];
+    var sel = value == selected ? ' selected' : '';
+    html += '<option value="' +value+ '"' +sel+ '>' +label+ '</option>';
+  }
+  html += '</select>';
+  return html;
+}
+
+function renderPlayer(num, game, canEdit) {
+  const pk = 'player_'+num;
+  const label = num < 3 ? 'Player '+num : 'Shared Partner';
+  let cell = '<td>';
+  if(canEdit) {
+    cell += makeSelect(pk+'.'+game.n, label, players, game[pk]);
+  }
+  else {
+    cell += labels[game[pk]] || label;
+  }
+  cell += '</td>';
+  return cell;
+}
+
+// Game consists of 3 rows
+function renderGame(game) {
+  let editMachine = false;
+  let editPlayers = [];
+  const canEdit = {{&editable}};
+  if(canEdit) {
+    if(step === 1) {
+      editMachine = game.n === 1;
+      editPlayers = game.n === 1 ? [1,3] : [];
+    }
+    else if(step === 2) {
+      editMachine = game.n === 2 || game.n === 3;
+      editPlayers = [2,4];
+    }
+    else if(step === 3) {
+      editPlayers = game.n === 2 || game.n === 3 ? [1,3] : [];
+    }
+  }
+
+  let chunk = '<tr class="header-row"><td colspan=2>#' +game.n+ ':  ';
+  if(editMachine) {
+    chunk += makeSelect('machine.'+game.n, 'Select Machine', machines, game.machine);
+  }
+  else {
+    chunk += labels[game.machine] || 'Machine';
+  }
+  chunk += '</td></tr>';
+
+  chunk += '<tr>';
+  chunk += renderPlayer(1, game, editPlayers.includes(1));
+  chunk += renderPlayer(2, game, editPlayers.includes(2));
+  chunk += '</tr>';
+
+  chunk += '<tr>';
+  chunk += renderPlayer(3, game, editPlayers.includes(3));
+  chunk += renderPlayer(4, game, editPlayers.includes(4));
+  chunk += '</tr>';
+  return chunk;
+}
+
+var chunk = '';
+
+//Need to render games.
+for(var i = 0; i < games.length; i++) {
+  var game = games[i];
+  chunk += renderGame(game);
+}
+
+var el = document.getElementById('games');
+el.innerHTML = chunk + el.innerHTML;
+
+</script>
