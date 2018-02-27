@@ -109,6 +109,10 @@ router.get('/stats',function(req,res) {
 //   res.send(html);
 // });
 
+router.get('/rules',function(req,res) {
+  res.redirect('https://docs.google.com/document/d/1NFfEDEAiFp470DArcyAQeTp4eFJ02fHLWYfaaxoowbc/edit');
+});
+
 router.get('/new-teams',function(req,res) {
   const template = fs.readFileSync('./template/call-for-teams.html').toString();
   const html = mustache.render(base,{
