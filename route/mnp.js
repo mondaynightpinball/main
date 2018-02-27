@@ -582,17 +582,22 @@ console.log("renderMatch, requested round:",params.round,match.round,match.key,u
 //console.log(perms);
 
   switch(state) {
+    case CONST.TIE_BREAKER:
+      template = fs.readFileSync('./template/tie_breaker.html').toString();
+      games = JSON.stringify(games);
+      editable = perms.canEdit;
+      break;
     case CONST.PICKING:
 console.log("Using picking template");
       template = fs.readFileSync('./template/picking.html').toString();
       games = JSON.stringify(games);
-      editable = team.getPermissions(ukey).canEdit;
+      editable = perms.canEdit;
       break;
     case CONST.RESPONDING:
 console.log("Using responding template");
       template = fs.readFileSync('./template/responding.html').toString();
       games = JSON.stringify(games);
-      editable = team.getPermissions(ukey).canEdit;
+      editable = perms.canEdit;
       break;
     case CONST.PLAYING:
     case CONST.COMPLETE:
@@ -666,6 +671,7 @@ console.log("Using playing template");
     players: match.players, //TODO: Deprecate this
     week: match.week,
     round: round.n, //ROUND, where is it used.
+    step: match.step || 0,
     games: games,
     // singles: ????
     doubles: (num == 4),

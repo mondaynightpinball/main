@@ -1,4 +1,5 @@
 module.exports = {
+  TIE_BREAKER: 'tie-breaker',
   SCHEDULED: 'scheduled',
   PREGAME: 'pregame',
   LINEUPS: 'lineups',

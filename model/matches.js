@@ -508,6 +508,10 @@ Match.prototype = {
     if(this.state == CONST.RESPONDING) {
       return order[1];
     }
+    if(this.state == CONST.TIE_BREAKER) {
+      if(this.step % 2 == 1) return this.home;
+      if(this.step == 2) return this.away;
+    }
   },
   // ------------------ MAKE PICKS -------------------------
   makePicks: function(params,callback) {
@@ -528,12 +532,13 @@ Match.prototype = {
       return callback(["ERROR: Not in a picking state"]);
     }
 
-    if(!isAuth(params.ukey,team.captains)) {
+    if(!isAuth(params.ukey, team.captains)) {
       return callback(["ERROR: " +params.ukey+ " not authorized to pick"]);
     }
     else {
       //At this point, the ukey is a captain of the "picking"
       //team, and posting picks for this.round and this.state.
+      // TODO: Seems like a bad idea to automatically write to the actual games objects.
       var games = this.getRound().games;
       for(prop in params.picks) {
         var x = params.picks[prop];
@@ -585,33 +590,80 @@ Match.prototype = {
         return true;
       };
 
-      for(var i = 0; i < games.length; i++) {
-        var g = games[i];
-        //Verify picking team picks.
-        if(!addMachine(g.machine)) picksReady = false;
-        if(!addPlayer(1,g.player_1)) picksReady = false;
-        if(numPlayers > 2) {
+      // TODO: This is where we need to alter what is considered ready to move on.
+      if(this.state == CONST.TIE_BREAKER) {
+        if(this.step == 1) {
+          let g = games[0];
+          if(!addMachine(g.machine)) picksReady = false;
+          if(!addPlayer(1,g.player_1)) picksReady = false;
           if(!addPlayer(3,g.player_3)) picksReady = false;
         }
-        if(this.state == CONST.RESPONDING) {
-          //Verify responding team picks.
+        if(this.step == 2) {
+          let g = games[0];
           if(!addPlayer(2,g.player_2)) picksReady = false;
-          if(numPlayers > 2) {
-            if(!addPlayer(4,g.player_4)) picksReady = false;
+          if(!addPlayer(4,g.player_4)) picksReady = false;
+
+          g = games[1];
+          if(!addMachine(g.machine)) picksReady = false;
+          if(!addPlayer(2,g.player_2)) picksReady = false;
+          if(!addPlayer(4,g.player_4)) picksReady = false;
+
+          g = games[2];
+          if(!addMachine(g.machine)) picksReady = false;
+          if(!addPlayer(2,g.player_2)) picksReady = false;
+          if(!addPlayer(4,g.player_4)) picksReady = false;
+        }
+        if(this.step == 3) {
+          let g = games[1];
+          if(!addPlayer(1,g.player_1)) picksReady = false;
+          if(!addPlayer(3,g.player_3)) picksReady = false;
+
+          g = games[2];
+          if(!addPlayer(1,g.player_1)) picksReady = false;
+          if(!addPlayer(3,g.player_3)) picksReady = false;
+        }
+
+        if(picksReady) {
+          if(this.step < 3) {
+            this.step++;
+          }
+          else {
+            this.state = CONST.PLAYING;
           }
         }
       }
-
-      console.log("state:",this.state,"picksReady:",picksReady);
-
-      if(this.state == CONST.PICKING) {
-        if(picksReady) this.state = CONST.RESPONDING;
-      }
-      else if(this.state == CONST.RESPONDING) {
-        if(picksReady) {
-          this.state = CONST.PLAYING;
+      else {
+        // ++++++++++ Regular round logic ++++++++++++++++
+        for(var i = 0; i < games.length; i++) {
+          var g = games[i];
+          //Verify picking team picks.
+          if(!addMachine(g.machine)) picksReady = false;
+          if(!addPlayer(1,g.player_1)) picksReady = false;
+          if(numPlayers > 2) {
+            if(!addPlayer(3,g.player_3)) picksReady = false;
+          }
+          if(this.state == CONST.RESPONDING) {
+            //Verify responding team picks.
+            if(!addPlayer(2,g.player_2)) picksReady = false;
+            if(numPlayers > 2) {
+              if(!addPlayer(4,g.player_4)) picksReady = false;
+            }
+          }
         }
+
+        console.log("state:",this.state,"picksReady:",picksReady);
+
+        if(this.state == CONST.PICKING) {
+          if(picksReady) this.state = CONST.RESPONDING;
+        }
+        else if(this.state == CONST.RESPONDING) {
+          if(picksReady) {
+            this.state = CONST.PLAYING;
+          }
+        }
+        // ++++++++++++ End of regular round logic +++++++++++++
       }
+
       this.save();
       callback(errors,this);
     }
@@ -910,11 +962,20 @@ Match.prototype = {
         if(points.home == points.away) {
           this.rounds.push(makeRound(5));
           more = true;
+          this.step = 1;
+          // TODO: This is where the tie breaker status is created.
+          //       if(this.rounds.length == 5) inTieBreaker = true;
         }
       }
+      // TODO: If inTieBreaker, need to follow the steps.
       if(more) {
         this.round++;
-        this.state = CONST.PICKING;
+        if(this.round == 5) {
+          this.state = CONST.TIE_BREAKER;
+        }
+        else {
+          this.state = CONST.PICKING;
+        }
       }
       else {
         this.state = CONST.COMPLETE;
