@@ -18,13 +18,16 @@ function load() {
 function Stats(obj) {
   this.key = obj.key;
   this.history = [];
-  this.pops = '0.000';
-  this.num_matches = 0;
-  this.ppm = '0.000';
-  this.points = {
-    won: 0,
-    of: 0
-  };
+  this.divisions = ['all', 'div-1', 'div-2'].map(id => ({
+    id,
+    pops: '0.000',
+    num_matches: 0,
+    ppm: '0.000',
+    points: { won: 0, of: 0 }
+  })).reduce((obj, div) => {
+    obj[div.id] = div;
+    return obj;
+  }, {});
 }
 
 load();

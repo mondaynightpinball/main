@@ -4,6 +4,7 @@ const fs = require('fs');
 
 const machines = require('../model/machines');
 const players = require('../model/players');
+const { teams } = require('../model/seasons').get();
 
 const PA = [0, 2.5, 3, 3, 2.5, 0];
 
@@ -59,6 +60,11 @@ const lookup = fs.readdirSync('data/matches')
   }, {});
   // console.log(names);
 
+  // For the time being, there are no mixed division matches.
+  // If the home team isn't found or doesn't have a division,
+  // then we can fall back to something else.
+  const division = teams[match.home.key] ? teams[match.home.key].division : 0;
+
   match.rounds.forEach(round => {
     if(round.n > 4) return;
     round.games.forEach(game => {
@@ -88,6 +94,7 @@ const lookup = fs.readdirSync('data/matches')
           week: match.week,
           round: round.n,
           machine: mk,
+          division,
           score: game[p.sn],
           points: game[p.tn],
           pops: format(game[p.tn] / PA[round.n])
@@ -121,17 +128,35 @@ const lookup = fs.readdirSync('data/matches')
 
 Object.keys(lookup).forEach(pk => {
   const player = lookup[pk];
-  const stats = player.history.reduce((tot, item) => {
+
+  const historyToStats = (history) => history.reduce((tot, item) => {
     tot.won += item.points;
     tot.of += PA[item.round];
     const mk = item.match;
     tot.pm[mk] = tot.pm[mk] ? tot.pm[mk] + 1 : 1;
     return tot;
   }, { won: 0, of: 0, pm: {} });
-  player.pops = format(stats.won / stats.of);
-  player.num_matches = Object.keys(stats.pm).length;
-  player.ppm = format(stats.won / player.num_matches);
-  player.points = { won: stats.won, of: stats.of };
+
+  const statsToPlayer = (stats) => {
+    const num_matches = Object.keys(stats.pm).length;
+    return {
+      pops: format(stats.of ? stats.won / stats.of : 0),
+      num_matches,
+      ppm: format(num_matches ? stats.won / num_matches : 0),
+      points: { won: stats.won, of: stats.of }
+    };
+  };
+
+  const statsAll = historyToStats(player.history);
+  const stats1 = historyToStats(player.history.filter(item => item.division == 1));
+  const stats2 = historyToStats(player.history.filter(item => item.division == 2));
+
+  player.divisions = {
+    'all': statsToPlayer(statsAll),
+    'div-1': statsToPlayer(stats1),
+    'div-2': statsToPlayer(stats2)
+  };
+
   require('../model/stats').set(pk, player);
   // console.log(player);
 });
