@@ -1,5 +1,13 @@
+<nav class="navbar navbar-dark p-0 mb-1" style="background-color:#008181;">
+  <div class="nav navbar-nav p-0">
+    {{#divisions}}
+    <span id="tab-{{id}}" class="nav-item nav-link div-tab">&nbsp;{{id}}&nbsp;</span>
+    {{/divisions}}
+  </div>
+</nav>
 
-<table class="table table-striped">
+{{#divisions}}
+<table id="div-{{id}}" class="table table-striped division hidden">
   <thead class="thead-default">
     <tr class="header-row">
       <td>&nbsp;</td>
@@ -9,16 +17,6 @@
       <td>POPS</td>
     </tr>
   </thead>
-<!--
-  <thead class="thead-default">
-    <tr>
-      <th>Player</th>
-      <th># Matches</th>
-      <th>PPM</th>
-      <th>POPS</th>
-    </tr>
-  </thead>
--->
   <tbody>
   {{#players}}
     <tr>
@@ -31,3 +29,23 @@
   {{/players}}
   </tbody>
 </table>
+{{/divisions}}
+
+<script>
+function showPane(id) {
+  $('.div-tab').removeClass('active');
+  $('#tab-'+id).addClass('active');
+  $('.division').addClass('hidden');
+  $('#div-'+id).removeClass('hidden');
+}
+
+$(document).ready(function() {
+  $('.div-tab').click(function(e) {
+    var id = $(this).text().trim();
+    console.log('clicked', id);
+    showPane(id);
+  });
+
+  showPane('all');
+});
+</script>

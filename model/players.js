@@ -20,8 +20,6 @@ function getPlayer(k) {
       try {
         p = JSON.parse(raw);
       } catch (e) { console.log(e); }
-      //Something could still be wrong, but I think JSON.parse will throw exception
-      //before this check is even made.
       if(p) _map[key] = p;
     }
     else {
@@ -75,13 +73,7 @@ console.log("No sugs file found: "+sname+ " Scanning players...");
 //       the 1 way nature of the hashing alg.
 const nameLookup = {};
 
-function makeKey(name) {
-  var hash = util.digest(name.trim().toLowerCase());
-
-  nameLookup[hash] = name; // HACK
-
-  return hash;
-}
+const makeKey = require('../lib/make-key');
 
 function passesMatch(params) {
   var p1 = params.pass || 'p1';
@@ -121,11 +113,12 @@ console.log("sendVerify()... ");
 }
 
 module.exports = {
-  makeKey: makeKey,
+  makeKey, // TODO: Remove as an export from players, now that it's a lib.
   all: getAll,
   //TODO: Should this involve a callback?
   get: getPlayer,
   // TODO: getName is definitely kind of a hack, and illustrates how bad the old data system is.
+  // TODO: Finish refactor of getName -> all-names.nameForKey
   getName: (key) => nameLookup[key] || 'MISSING KEY',
    //TODO: Change to use callback?
   getByEmail: function(email) {

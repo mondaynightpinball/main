@@ -10,8 +10,9 @@ const seasons = require('../model/seasons');
 const matches = require('../model/matches'); //For standings
 const players = require('../model/players');
 const stats = require('../model/stats');
-const ifpa = require('../model/ifpa');
+// const ifpa = require('../model/ifpa');
 const IPR = require('../model/ratings');
+const { nameForKey } = require('../lib/all-names');
 
 const base = fs.readFileSync('./template/base.html').toString();
 
@@ -70,29 +71,61 @@ router.get('/stats',function(req,res) {
   const template = fs.readFileSync('./template/stats.html').toString();
   const all = stats.all();
 
-  let max = 0;
-  for(i in all) {
-    const x = all[i].num_matches;
-    if(x > max) max = x;
-  }
+  const divs = all.reduce((divs, player) => {
+    const pDivs = player.divisions;
+    const { name, key } = player;
+    Object.keys(pDivs).forEach(divId => {
+      divs[divId] = divs[divId] || [];
+      divs[divId].push(
+        Object.assign({}, pDivs[divId], { name, key })
+      );
 
-  const cut = Math.round(max * 0.4);
+      // NOTE: At node version 6.9.1, you can't use object spread operator
+      // divs[divId].players.push({
+      //   name: player.name,
+      //   ...pDivs[divId]
+      // });
+    });
+    return divs;
+  }, {});
 
-  all.sort(function(a,b) {
-    if(a.num_matches < cut && b.num_matches >= cut) return 1;
-    if(b.num_matches < cut && a.num_matches >= cut) return -1;
-    if(a.pops > b.pops) return -1;
-    if(b.pops > a.pops) return 1;
-    return 0;
+  // console.log(divisions);
+
+  const divisions = Object.keys(divs).map(divId => {
+    const list = divs[divId];
+
+    console.log('DIVISION:', divId);
+
+    const players = list.filter(p => p.num_matches > 0);
+    console.log(players.length, 'players');
+
+    const max = players.reduce((max, p) => {
+      return Math.max(p.num_matches, max);
+    }, 0);
+
+    const cut = Math.round(max * 0.4);
+
+    players.sort((a, b) => {
+      if(a.num_matches < cut && b.num_matches >= cut) return 1;
+      if(b.num_matches < cut && a.num_matches >= cut) return -1;
+      if(a.pops > b.pops) return -1;
+      if(b.pops > a.pops) return 1;
+      return 0;
+    });
+
+    for(let i = 0; i < players.length; i++) {
+      players[i].n = i + 1;
+    }
+
+    return {
+      id: divId,
+      players
+    };
   });
-
-  for(i in all) {
-    all[i].n = parseInt(i) + 1;
-  }
 
   const html = mustache.render(base,{
     title: 'Stats',
-    players: all
+    divisions
   }, {
     content: template
   });
@@ -197,7 +230,8 @@ router.get('/teams/:team_id',function(req,res) {
     teamRating += parseInt(rating);
 
     const pk = players.makeKey(p.name); //TODO: UGLY makeKey call.
-    const ps = stats.get(pk);
+    // TODO: What divisions to show? Thinking either all or the div of the team.
+    const ps = stats.get(pk).divisions.all;
     const pops = ps ? ps.points.won / ps.points.of : 0;
     lineup.push({
       key: pk,
@@ -280,20 +314,23 @@ router.get('/players/:key',function(req,res) {
   // //TODO: Need something different than using players == users.
   // if(!p) { return res.redirect('/players'); }
 
-  const name = players.getName(req.params.key);
+  const { key } = req.params;
+  const fullStats = stats.get(key);
+  const name = fullStats.name || nameForKey[key];
 
   //TODO: Might be nice to have team mapped.
-  const st = stats.get(req.params.key);
+  const st = fullStats.divisions.all;
   const html = mustache.render(base,{
     title: 'Player',
-    name: name,
+    name,
     num_matches: st.num_matches,
     points_won: st.points.won,
     ppm: st.ppm,
     pops: st.pops,
-    ifpa_rank: ifpa.rank(name) || 'Unknown',
+    // ifpa_rank: ifpa.rank(name) || 'Unknown',
     ipr: IPR.forName(name) || 'Unknown',
-    history: st.history
+    // TODO: fullStats.history might be a case for moving history into divisions
+    history: fullStats.history
   },{
     content: template
   });

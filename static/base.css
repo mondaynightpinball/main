@@ -222,3 +222,8 @@ margin-left: 7px;
 .stripe {
   background: #b8b8b8;
 }
+
+/* TODO Move this closer to where it belongs */
+.div-tab {
+  cursor: pointer;
+}
