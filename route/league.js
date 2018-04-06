@@ -93,11 +93,7 @@ router.get('/stats',function(req,res) {
 
   const divisions = Object.keys(divs).map(divId => {
     const list = divs[divId];
-
-    console.log('DIVISION:', divId);
-
     const players = list.filter(p => p.num_matches > 0);
-    console.log(players.length, 'players');
 
     const max = players.reduce((max, p) => {
       return Math.max(p.num_matches, max);
