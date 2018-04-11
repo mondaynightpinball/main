@@ -35,6 +35,7 @@ body {
   min-height: 420px;
   margin: 0 auto;
   padding: 2%;
+  overflow: auto;
 }
 #content ul, ol {
   /*padding: 0;*/
