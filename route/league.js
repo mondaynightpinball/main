@@ -74,10 +74,12 @@ router.get('/stats',function(req,res) {
   const divs = all.reduce((divs, player) => {
     const pDivs = player.divisions;
     const { name, key } = player;
+    const rating = IPR.forName(name) || 0;
+
     Object.keys(pDivs).forEach(divId => {
       divs[divId] = divs[divId] || [];
       divs[divId].push(
-        Object.assign({}, pDivs[divId], { name, key })
+        Object.assign({}, pDivs[divId], { name, key, rating })
       );
 
       // NOTE: At node version 6.9.1, you can't use object spread operator
@@ -221,7 +223,7 @@ router.get('/teams/:team_id',function(req,res) {
   for(i in team.roster) {
     const p = team.roster[i];
 
-    const rating = IPR.forName(p.name.trim()) || 0;
+    const rating = IPR.forName(p.name) || 0;
     // TODO: Handle cases where rating == undefined, instead of default to 0.
     teamRating += parseInt(rating);
 
