@@ -119,7 +119,6 @@ module.exports = {
   all: getAll,
   //TODO: Should this involve a callback?
   get: getPlayer,
-  // TODO: getName is definitely kind of a hack, and illustrates how bad the old data system is.
    //TODO: Change to use callback?
   getByEmail: function(email) {
     if(!util.isEmail(email)) return;
