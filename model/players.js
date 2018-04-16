@@ -5,8 +5,17 @@ var ids = require('../lib/ids');
 var email = require('../lib/email');
 var util = require('../lib/util');
 var A = require('../lib/auth');
+const makeKey = require('../lib/make-key');
 
 var _map = {};
+
+function destroyPlayer(k) {
+  delete _map[k];
+  const filename = `data/players/${k}`;
+  if(util.fileExists(filename)) {
+    fs.unlinkSync(filename);
+  }
+}
 
 function getPlayer(k) {
   //var key = k.toLowerCase();
@@ -48,7 +57,7 @@ var sugs = [];
 //Load up the sugs.
 var sname = 'data/sugs.json';
 if(util.fileExists(sname)) {
-console.log("Loading sugs from " +sname+ "  ...");
+  console.log("Loading sugs from " +sname+ "  ...");
   try {
     sugs = JSON.parse(fs.readFileSync(sname));
   } catch (err) {
@@ -57,7 +66,7 @@ console.log("Loading sugs from " +sname+ "  ...");
   }
 }
 else {
-console.log("No sugs file found: "+sname+ " Scanning players...");
+  console.log("No sugs file found: "+sname+ " Scanning players...");
   //TODO Ideally we add sugs from as many points as we can collect.
   var list = getAll();
   for(i in list) {
@@ -67,13 +76,6 @@ console.log("No sugs file found: "+sname+ " Scanning players...");
 }
 
 //TODO: load players from db? See hack at the bottom of the file.
-
-// HACK: This is a reverse hash for player keys.
-// TODO: This might possibly be insecure if we were relying on
-//       the 1 way nature of the hashing alg.
-const nameLookup = {};
-
-const makeKey = require('../lib/make-key');
 
 function passesMatch(params) {
   var p1 = params.pass || 'p1';
@@ -118,8 +120,6 @@ module.exports = {
   //TODO: Should this involve a callback?
   get: getPlayer,
   // TODO: getName is definitely kind of a hack, and illustrates how bad the old data system is.
-  // TODO: Finish refactor of getName -> all-names.nameForKey
-  getName: (key) => nameLookup[key] || 'MISSING KEY',
    //TODO: Change to use callback?
   getByEmail: function(email) {
     if(!util.isEmail(email)) return;
@@ -189,10 +189,10 @@ module.exports = {
     //var player = this.getByName(name);
     //if(!player) player = this.getByEmail(email);
     var player = this.getByEmail(email);
-if(player) console.log("Email already used. verified: " +player.verified);
+    if(player) console.log("Email already used. verified: " +player.verified);
     var token;
     if(!player) {
-console.log("Player is unknown, creating new...");
+      console.log("Player is unknown, creating new...");
       var key = makeKey(name);
       token = ids.create();
 
@@ -205,18 +205,18 @@ console.log("Player is unknown, creating new...");
       };
     }
     else {
-console.log("Player object existed already...");
-//, resending verify link...");
+      console.log("Player object existed already...");
+      //, resending verify link...");
       if(player.verified) {
-console.log("Player already verified, sending to existing email...");
+        console.log("Player already verified, sending to existing email...");
       }
       else {
-console.log("Player not yet verified, using the most recent email...");
+        console.log("Player not yet verified, using the most recent email...");
         player.email = email;
       }
       token = A.tokens.get(player.key);
       if(!token) {
-console.log("Token did not exist for " +player.key);
+        console.log("Token did not exist for " +player.key);
         token = ids.create();
         A.tokens.set(player.key, token);
       }
@@ -231,7 +231,7 @@ console.log("Token did not exist for " +player.key);
   },
   verify: function(params,callback) {
     var token = params.token;
-console.log("verify token: ",token);
+    console.log("verify token: ",token);
     //TODO: Index the tokens if needed.
     //TODO: OR mongo.find('players',{token: token})...
 
@@ -254,10 +254,11 @@ console.log("verify token: ",token);
     var player = this.get(params.ukey);
     if(!player) { return callback("ERR: Player not found for " +params.ukey); }
     A.shadows.put(player.key, params.pass);
-console.log("Password set for: " +player.key);
+    console.log("Password set for: " +player.key);
     callback(null,player);
   },
   getSuggestions: function() {
     return sugs;
-  }
+  },
+  destroy: destroyPlayer
 };
