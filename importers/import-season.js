@@ -32,7 +32,7 @@ for(let i = 1; i < 13; i++) {
 
 for(let i = 1; i < 9; i++) {
   let tk = 'QF' +i;
-  pteams[tk] = { key: tk, name: 'QF #' +i };
+  pteams[tk] = { key: tk, name: 'SF #' +i };
 }
 
 pteams['H45'] = { key: 'H45', name: 'SF 4 vs 5' };
@@ -51,17 +51,16 @@ for(let i = 1; i < 20; i++) {
   labels[i] = 'WEEK ' + i;
   codes[i] = 'WK' + i;
 }
-//NOTE: These labels are for season 6.
+//NOTE: These labels are for season 9.
 //      Earlier seasons did not have a WC round.
+//      Also, there are now 2 divisions.
 labels[91] = 'Wild Card';
-labels[92] = 'Quarter Finals';
-labels[93] = 'Semi Finals';
-labels[94] = 'Finals & Bronze';
+labels[92] = 'Semi Finals';
+labels[93] = 'Finals & Bronze';
 
 codes[91] = 'WC';
-codes[92] = 'QF';
-codes[93] = 'SF';
-codes[94] = 'FNL';
+codes[92] = 'SF';
+codes[93] = 'FNL';
 
 //SECOND, Load all the players and assign them to their teams.
 rows = csv.load(stem + 'playerdb.csv');
