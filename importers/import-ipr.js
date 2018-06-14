@@ -1,4 +1,4 @@
-  'use strict';
+'use strict';
 
 const info = JSON.parse(require('fs').readFileSync('data/playerinfo.json'));
 const { players } = info;
