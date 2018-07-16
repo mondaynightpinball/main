@@ -105,6 +105,8 @@ router.get('/venues/:key',function(req,res) {
     else list.push({ key: mk, name: mk});
   }
 
+  list.sort((a,b) => [a.name, b.name].sort()[0] == a.name ? -1 : 1);
+
   var template = fs.readFileSync('./template/venue.html').toString();
   var html = mustache.render(base,{
     title: name,
