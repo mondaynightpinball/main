@@ -10,14 +10,14 @@ function createMatches(params) {
   var key = params.key;
   var season = seasons.get({key: key});
   var num = key.substring(key.indexOf('-')+1,key.length);
-console.log("season num:",num);
+  console.log("season num:",num);
   var info = season.getWeek(week);
-console.log("match info: ----\n",info);
+  console.log("match info: ----\n",info);
   for(var i in info.matches) {
     var x = info.matches[i];
-console.log("info[" +i+ "]:",x);
+    console.log("info[" +i+ "]:",x);
 
-//TODO: Only create match if it didn't already exist.
+    //TODO: Only create match if it didn't already exist.
     //if(matches.get(info.match_key)) .... Needs to move the key concat up.
     var match = matches.create({
       ukey: CONST.ROOT, //TODO: Hard coded auth for now.
@@ -33,7 +33,7 @@ console.log("info[" +i+ "]:",x);
       venue: x.venue
     }, function(err,m) {
       if(err) console.log(err);
-//console.log("...created:",m);
+      //console.log("...created:",m);
 
       //Add rosters and captains.
       var home = season.teams[x.home_key];
