@@ -4,6 +4,7 @@ var matches = require('./matches');
 
 function loadSeason(key) {
   var fn = 'data/'+key+'/season.json';
+  // TODO: Maybe use try-catch on loading seasons.
   var buf = fs.readFileSync(fn);
   var season = JSON.parse(buf);
 

@@ -1,7 +1,7 @@
 var venues = require('../model/venues');
 var csv = require('../lib/csv');
 
-var num = process.argv[2] || '9';
+var num = process.argv[2] || '10';
 
 var stem = 'data/season-' +num+ '/';
 
