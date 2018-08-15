@@ -147,8 +147,7 @@ router.get('/signup',function(req,res) {
     redirect_url: req.params.redirect_url,
     // players: JSON.stringify(players.all()),
     // sugs: players.getSuggestions(),
-    venues: venues.all(),
-    isAdmin: true //TODO: Change to isAdmin
+    venues: venues.current()
   },{
     content: template
   });

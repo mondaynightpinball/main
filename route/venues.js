@@ -17,17 +17,14 @@ router.get('/venues',function(req,res) {
 
   //TODO: Change hard coded canCreate
   var canCreate = CONST.ROOT == ukey;
-  var list = venues.all();
-// console.log('before sort:',list);
+
+  var list = venues.current();
+  // console.log('before sort:',list);
 
   list.sort(function(a,b) {
-   if(a.name == b.name) return 0;
-   var check = [a.name, b.name];
-    check.sort();
-    if(check[0] == a.name) return -1;
-    return 1;
+    return [a.name, b.name].sort()[0] === a.name ? -1 : 1;
   });
-// console.log('after sort:',list);
+  // console.log('after sort:',list);
 
   var html = mustache.render(base,{
     title: 'Venues',
