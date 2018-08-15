@@ -1,6 +1,7 @@
 'use strict';
 
-require('../lib/csv').load('data/season-9/roster-grid.csv')
+// TODO: No more hard coded season nums!
+require('../lib/csv').load('data/season-10/roster-grid.csv')
   .filter(row => row[3] != '')
   .reduce((p, row) => {
     p.push(row.slice(2,5));   // C-D-E

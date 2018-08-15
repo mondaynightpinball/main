@@ -32,12 +32,15 @@ function loadSeason(key) {
   return season;
 }
 
-var CURRENT = 'season-9';
+var CURRENT = 'season-10';
 
 var _map = {
-  'season-6': loadSeason('season-6'),
-  'season-7': loadSeason('season-7'),
-  'season-8': loadSeason('season-8'),
+  // Not sure why we would need to load other seasons like this.
+  // Eventually everything will be in a db.
+  // 'season-6': loadSeason('season-6'),
+  // 'season-7': loadSeason('season-7'),
+  // 'season-8': loadSeason('season-8'),
+  // 'season-9': loadSeason('season-9'),
   [CURRENT]: loadSeason(CURRENT)
 };
 
