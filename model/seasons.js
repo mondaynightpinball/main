@@ -5,7 +5,13 @@ var matches = require('./matches');
 function loadSeason(key) {
   var fn = 'data/'+key+'/season.json';
   // TODO: Maybe use try-catch on loading seasons.
-  var buf = fs.readFileSync(fn);
+  var buf;
+  try {
+    buf = fs.readFileSync(fn);
+  } catch (err) {
+    console.log('Problem loading',key,err);
+    return;
+  }
   var season = JSON.parse(buf);
 
   season.currentWeek = function() {

@@ -1,3 +1,4 @@
+const fs = require('fs');
 var venues = require('../model/venues');
 var csv = require('../lib/csv');
 
@@ -227,5 +228,5 @@ var season = {
   weeks: list
 };
 
-//console.log(season);
-console.log(JSON.stringify(season,null,2));
+// console.log(JSON.stringify(season,null,2));
+fs.writeFileSync(`${stem}/season.json`, JSON.stringify(season,null,2));
