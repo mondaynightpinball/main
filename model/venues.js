@@ -1,5 +1,7 @@
 var fs = require('fs');
 
+const season = require('../model/seasons').get();
+
 var _map = {};
 
 var filename = 'data/venues.json';
@@ -64,6 +66,17 @@ module.exports = {
       list.push(_map[k]);
     }
     return list;
+  },
+  current: function() {
+    const { teams } = season;
+    const allowed = Object.keys(teams)
+      .map(tk => teams[tk])
+      .reduce((map, team) => {
+        map[team.venue] = true;
+        return map;
+      }, {});
+    return this.all().filter(v => allowed[v.key]);
+    // TODO: Why not just always sort, instead of doing it multiple times in the code.
   },
   save: saveVenues
 };

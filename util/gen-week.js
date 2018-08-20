@@ -85,18 +85,16 @@ function createMatches(params) {
         name: away.co_captain,
         want_captain: true
       });
-
     });
-
-
   }
 }
 
 // TODO: Consider throwing an error for argv.length < 3
 var params = {
-  key: 'season-9',
+  key: 'season-10',
   week: process.argv[2] || 1
 };
 
-//TEST TEST TEST
+// NOTE: It is intended to run createMatches
+//       when this file is loaded/executed.
 createMatches(params);

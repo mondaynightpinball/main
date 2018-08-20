@@ -145,10 +145,7 @@ router.get('/signup',function(req,res) {
   var html = mustache.render(base,{
     title: 'Sign-Up',
     redirect_url: req.params.redirect_url,
-    // players: JSON.stringify(players.all()),
-    // sugs: players.getSuggestions(),
-    venues: venues.all(),
-    isAdmin: true //TODO: Change to isAdmin
+    venues: venues.current()
   },{
     content: template
   });
@@ -157,21 +154,12 @@ router.get('/signup',function(req,res) {
 });
 
 router.post('/signup',function(req,res) {
-console.log("POST Signup");
 
   req.body.timestamp = Date.now();
   var json = JSON.stringify(req.body, null, 2);
   var key = util.digest(json);
 
   fs.writeFileSync('./data/signups/' +key+ '.json', json);
-
-  //var template = 'Thanks for signing up!';
-  //var html = mustache.render(base, {
-  //  title: 'Thanks'
-  //},{
-  //  content: template
-  //});
-  //res.send(html);
 
   var host = req.protocol + '://' +req.hostname;
   players.signup({
