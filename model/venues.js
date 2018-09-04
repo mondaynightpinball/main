@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-const season = require('../model/seasons').get();
+const season = require('./seasons').get();
 
 var _map = {};
 

@@ -1,6 +1,6 @@
 var fs = require('fs');
 
-var matches = require('./matches');
+// var matches = require('./matches');
 
 function loadSeason(key) {
   var fn = 'data/'+key+'/season.json';
@@ -33,7 +33,8 @@ function loadSeason(key) {
     console.log("NOT IMPLEMENTED! getWeekByDate(), date:",date);
   };
 
-  season.getStandings = () => require('../lib/get-standings')(season, matches);
+  // TODO: There is a whole lot of require hell going on here.
+  season.getStandings = () => require('../lib/get-standings')(season, require('./matches'));
 
   console.log("loadSeason()",key,fn,season.key);
   return season;
