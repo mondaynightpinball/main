@@ -6,7 +6,7 @@ var matches = require('../model/matches');
 function createMatches(params) {
   var params = params || {};
   //NOTE: We do not want a default week, to avoid accidental overwrite.
-  var week = params.week; // || 1;
+  var week = params.week;
   var key = params.key;
   var season = seasons.get({key: key});
   var num = key.substring(key.indexOf('-')+1,key.length);
@@ -17,13 +17,16 @@ function createMatches(params) {
     var x = info.matches[i];
     console.log("info[" +i+ "]:",x);
 
+    // TODO: What about playoff codes?
+    var code = info.code || parseInt(week) ? 'WK' + week : 'Scrimmage';
+
     //TODO: Only create match if it didn't already exist.
     //if(matches.get(info.match_key)) .... Needs to move the key concat up.
     var match = matches.create({
       ukey: CONST.ROOT, //TODO: Hard coded auth for now.
       //key: 'mnp-' +num+ '-' +week+ '-' +x.away_key+ '-' +x.home_key,
       key: x.match_key,
-      name: info.code + ' ' + x.away_key + ' @ ' + x.home_key,
+      name: code + ' ' + x.away_key + ' @ ' + x.home_key,
       // name: 'WK '+ week+ ' ' + x.away_key + ' @ ' + x.home_key,
       type: 'manual', //TODO: Can remove if manual is made the default of Match.type
       //state: CONST.SCHEDULED,
@@ -33,7 +36,7 @@ function createMatches(params) {
       venue: x.venue
     }, function(err,m) {
       if(err) console.log(err);
-      //console.log("...created:",m);
+      // console.log("...created:",m);
 
       //Add rosters and captains.
       var home = season.teams[x.home_key];
@@ -89,10 +92,9 @@ function createMatches(params) {
   }
 }
 
-// TODO: Consider throwing an error for argv.length < 3
 var params = {
   key: 'season-10',
-  week: process.argv[2] || 1
+  week: process.argv[2]
 };
 
 // NOTE: It is intended to run createMatches

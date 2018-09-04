@@ -29,7 +29,7 @@ function makeRound(n) {
   var num = NUM_GAMES[n-1];
   for(var j = 0; j < num; j++) {
     round.games[j] = { n: j+1 };
-//TODO: Move roundDone here as round.isDone
+    //TODO: Move roundDone here as round.isDone
   }
 
   return round;
@@ -80,7 +80,7 @@ function deleteMatch(key) {
 //TODO: Q: It seems like some day we'll hit the memory wall
 //	   on how much junk we can just load.
 function loadAll() {
-console.log("loadAll()...");
+  console.log("loadAll()...");
   var list = fs.readdirSync('data/matches');
   for(i in list) {
     var fn = list[i];
@@ -356,7 +356,7 @@ Match.prototype = {
       var roster = teams[team.key] ? teams[team.key].roster : null;
       var isRoster = false;
       var isLeague = /^mnp-\d+-\d+/.test(this.key);
-      console.log(this.key, isLeague, isRoster);
+      // console.log(this.key, isLeague, isRoster);
       if(roster) {
         for(x in roster) {
           var rp = roster[x];

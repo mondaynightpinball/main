@@ -65,26 +65,20 @@ codes[93] = 'FNL';
 
 //SECOND, Load all the players and assign them to their teams.
 rows = csv.load(stem + 'playerdb.csv');
-//console.log(rows);
 
 //Figure out which teams players go on, and if they are captains.
 for(let i in rows) {
-  //console.log("row["+i+"]: " +rows[i]);
-
   let row = rows[i];
   if(row.length > 1) {
-    let lkey = row[0];
-    let name = row[1];
-    let tk = row[2];
+    let name = row[0];
+    let tk = row[1];
     if(tk && tk.length > 0 && teams[tk]) {
 
       var team = teams[tk];
-      if(row[3] == 'C') team.captain = name;
-      if(row[3] == 'A') team.co_captain = name;
+      if(row[2] == 'C') team.captain = name;
+      if(row[2] == 'A') team.co_captain = name;
       team.roster.push({
-        lkey: lkey,
         name: name //,
-        //team: tk
       });
     }
   }
@@ -92,7 +86,6 @@ for(let i in rows) {
 
 //THIRD, Load all the matches to create schedules.
 rows = csv.load(stem + 'matches.csv');
-
 var weeks = {};
 
 for(let i in rows) {
@@ -106,7 +99,7 @@ for(let i in rows) {
     venue: row[4]
   };
 
-  if(match.week > 0) {
+  if(match.week == 'S' || match.week > 0) {
     var home = teams[match.home];
     var away = teams[match.away];
 
