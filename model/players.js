@@ -9,6 +9,7 @@ const makeKey = require('../lib/make-key');
 
 var _map = {};
 
+// TODO: ALERT, destroy player isn't erasing anything but the player file.
 function destroyPlayer(k) {
   delete _map[k];
   const filename = `data/players/${k}`;
@@ -99,7 +100,7 @@ function savePlayer(player) {
 }
 
 function sendVerify(params) {
-console.log("sendVerify()... ");
+  console.log("sendVerify()... ");
   var template = fs.readFileSync('./template/email_verify.html').toString();
 
   var url = params.url;
