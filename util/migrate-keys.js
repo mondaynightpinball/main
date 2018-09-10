@@ -23,6 +23,7 @@ const makeKey = player => require('../lib/make-key')(player.name);
 
 const migratePlayer = (oldKey, props) => {
   const player = JSON.parse(fs.readFileSync(`data/players/${oldKey}`));
+  if(!props.name) delete props.name; // Remove unwanted name: undefined, don't want to overwrite in that case.
   Object.assign(player, props); // TODO: Update node version to use ...props
   const newKey = makeKey(player);
   if(oldKey === newKey) {
@@ -49,6 +50,7 @@ const changeName = (oldKey, name) => {
 };
 
 // For right now, just fix a list of ids.
-const keys = process.argv.slice(2);
+const [ key, newName ] = process.argv.slice(2);
 
-keys.forEach(migratePlayer);
+// console.log(key, newName);
+migratePlayer(key, { name: newName });
