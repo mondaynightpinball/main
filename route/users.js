@@ -121,7 +121,7 @@ router.post('/changepass',function(req,res) {
 //      and it would just redirect back so quick that you
 //      wouldn't even know that you were logged out.
 router.get('/logout', function(req,res) {
-console.log("LOGOUT request");
+  console.log("LOGOUT request");
   clearUser(req,res);
 
   //Should we remove the entire req.user property?
@@ -184,7 +184,7 @@ router.post('/signup',function(req,res) {
 });
 
 router.get('/verify/:token',function(req,res) {
-console.log("GET /verify token:",req.params.token);
+  console.log("GET /verify token:",req.params.token);
   players.verify(req.params,function(err,player) {
     if(err) {
       console.log(err);
@@ -200,7 +200,7 @@ router.get('/createpass',function(req,res) {
 
   var ukey = req.user.key;
 
-console.log("GET /createpass ukey: ",ukey);
+  console.log("GET /createpass ukey: ",ukey);
 
   if(!ukey) { return res.redirect('/signup'); }
 
@@ -215,7 +215,7 @@ console.log("GET /createpass ukey: ",ukey);
 });
 
 router.post('/createpass',function(req,res) {
-console.log("POST /createpass");
+  console.log("POST /createpass");
   var ukey = req.user.key;
   if(!ukey) { return res.redirect('/signup'); }
 
