@@ -557,7 +557,7 @@ function renderMatch(params) {
   var team_name = '';
   if(team) team_name = team.name;
 
-console.log("renderMatch, requested round:",params.round,match.round,match.key,ukey,state,match.state);
+  console.log("renderMatch, requested round:",params.round,match.round,match.key,ukey,state,match.state);
 
   var round = match.getRound(params.round); // Defaults to match.round
   //console.log("round:",round);
@@ -578,6 +578,9 @@ console.log("renderMatch, requested round:",params.round,match.round,match.key,u
   var rows = [];
 
   var perms = team ? team.getPermissions(ukey) : { canEdit: false };
+
+  var away_ipr = 0;
+  var home_ipr = 0;
 
 //console.log(perms);
 
@@ -634,6 +637,8 @@ console.log("Using playing template");
           home: i < h.length ? hc + h[i].name + hsub : '',
           home_rank: i < h.length ? IPR.forName(h[i].name) : 0
         });
+        away_ipr += i < a.length ? IPR.forName(a[i].name) : 0;
+        home_ipr += i < h.length ? IPR.forName(h[i].name) : 0;
       }
       break;
     default:
@@ -692,10 +697,12 @@ console.log("Using playing template");
     away_bonus: points.bonus.away,
     away_points: p.away,
     away_total: points.away,
+    away_ipr,
     home_team: match.home.name,
     home_points: p.home,
     home_bonus: points.bonus.home,
     home_total: points.home,
+    home_ipr,
     finished: state == CONST.PLAYING && round.done,
     isLeftCaptain: left.hasCaptain(ukey),
     isRightCaptain: right.hasCaptain(ukey),
