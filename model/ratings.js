@@ -6,7 +6,7 @@ const map = fs.readFileSync('data/IPR.csv').toString()
   .map(line => line.split(','))
   .reduce((m, row) => {
     const [ ipr, name ] = row;
-    m[name.trim().toLowerCase()] = ipr;
+    m[name.trim().toLowerCase()] = parseInt(ipr);
     return m;
   }, {});
 
