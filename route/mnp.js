@@ -591,20 +591,17 @@ function renderMatch(params) {
       editable = perms.canEdit;
       break;
     case CONST.PICKING:
-console.log("Using picking template");
       template = fs.readFileSync('./template/picking.html').toString();
       games = JSON.stringify(games);
       editable = perms.canEdit;
       break;
     case CONST.RESPONDING:
-console.log("Using responding template");
       template = fs.readFileSync('./template/responding.html').toString();
       games = JSON.stringify(games);
       editable = perms.canEdit;
       break;
     case CONST.PLAYING:
     case CONST.COMPLETE:
-console.log("Using playing template");
       template = fs.readFileSync('./template/playing.html').toString();
       games = JSON.stringify(games);
       break;
