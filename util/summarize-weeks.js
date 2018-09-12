@@ -22,3 +22,22 @@ Object.keys(weeks).forEach(stem => {
 
   fs.writeFileSync(target, JSON.stringify(week, null, 2));
 });
+
+const parse = stem => {
+  const [ , season, week ] = stem.match(pattern);
+  // console.log({season, week});
+  return (100 * parseInt(season)) + parseInt(week);
+};
+
+const current = Object.keys(weeks)
+  .reduce((current, stem) => {
+    const order = parse(stem);
+    if (order > current.order) {
+      current.order = order;
+      current.stem = stem;
+    }
+    return current;
+  }, { order: 0 });
+
+const curName = 'static/match_summary/mnp-current.json';
+fs.writeFileSync(curName, JSON.stringify(weeks[current.stem], null, 2));
