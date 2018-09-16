@@ -237,7 +237,6 @@ function Match(params) {
 
   this.venue = venue;
 
-
   this.away = new Team(params.away || { name: "Away Team" });
   this.home = new Team(params.home || { name: "Home Team" });
   this.rounds = makeRounds();
@@ -1186,6 +1185,7 @@ function gameDone(game, r) {
 }
 
 module.exports = {
+  Match,
   //TODO: Should probably add callbacks to get and all.
   get: function(key) {
     var match = _map[key];
