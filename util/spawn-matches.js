@@ -17,24 +17,28 @@ const season = require('../model/seasons').get();
 const matches = require('../model/matches');
 const Match = matches.Match;
 
-const now = new Date();
-const today = new Date(`${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate() + 1}`);
-const time = today.getTime();
+const getOrder = (date) => {
+  const s = [
+    date.getFullYear(),
+    date.getMonth() + 1,
+    date.getDate() + 1
+  ].join('');
+  return parseInt(s);
+};
 
-const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
+const now = new Date();
+const time = getOrder(now);
 
 const current = season.weeks.find(week => {
-  const date = new Date(week.date).getTime();
+  const date = getOrder(new Date(week.date));
   console.log('week: ', date, week.date);
   console.log('today:', time);
-  console.log('max :', WEEK_IN_MS);
   console.log('diff:', date - time);
-  if (date >= time && date - time < WEEK_IN_MS) {
+  if (date >= time && date - time < 7) {
     return true;
   }
 });
 
-// console.log(current);
 const { code, date } = current;
 
 current.matches
@@ -52,5 +56,5 @@ current.matches
   })
   .forEach(match => {
     console.log(match.name);
-    match.save();
+    // match.save();
   });
