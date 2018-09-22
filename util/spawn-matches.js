@@ -45,16 +45,19 @@ current.matches
   .filter(({match_key}) => !matches.get(match_key))
   .map(info => {
     console.log(info);
+    const away = season.teams[info.away_key];
+    const home = season.teams[info.home_key];
     return new Match({
       key: info.match_key,
       name: `${code} ${info.away_key} @ ${info.home_key}`,
       week: current.n,
       date,
       venue: info.venue,
-
+      away,
+      home,
     });
   })
   .forEach(match => {
-    console.log(match.name);
-    // match.save();
+    // console.log(match);
+    match.save();
   });

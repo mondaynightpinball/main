@@ -1,16 +1,4 @@
 {{> head}}
-<!-- Team info -->
-{{#team.key}}
-<table class="table">
-<tr>
-<td>Team:</td>
-<td><a href="/teams/{{team.key}}">{{team.name}}</a></td>
-</tr>
-<tr>
-<td>Team Rating</td>
-<td>{{team_rating}}</td>
-</table>
-{{/team.key}}
 
 {{#canAdd}}
 <form action="/matches/{{match_id}}/players/add" method="POST">
@@ -88,7 +76,7 @@ $(document).ready(function() {
 {{/captains}}
 </table>
 
-Lineup: {{lineup.length}} Players
+Lineup: {{lineup.length}} Players IPR: {{team_rating}}
 <table class="table">
 <tr class="header-row">
 <td class="text-xs-center">IPR</td>

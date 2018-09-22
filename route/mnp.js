@@ -368,7 +368,7 @@ function renderTeam(params) {
   var lineup = [];
   for(i in team.lineup) {
     var p = team.lineup[i];
-    const rating = IPR.forName(p.name.trim()) || 0;
+    const rating = p.IPR || IPR.forName(p.name.trim()) || 0;
     // TODO: Handle cases where rating == undefined, instead of default to 0.
     teamRating += parseInt(rating);
 
@@ -582,8 +582,6 @@ function renderMatch(params) {
   var away_ipr = 0;
   var home_ipr = 0;
 
-//console.log(perms);
-
   switch(state) {
     case CONST.TIE_BREAKER:
       template = fs.readFileSync('./template/tie_breaker.html').toString();
@@ -615,6 +613,12 @@ function renderMatch(params) {
       var h = match.home.lineup;
       a.sort(nameSort);
       h.sort(nameSort);
+
+      const getIPR = (arr, i) => {
+        if(!arr[i]) return 0;
+        return arr[i].IPR || IPR.forName(arr[i].name) || 0;
+      };
+
       // TODO: Add team sums to pregame view
       var nr = Math.max(a.length, h.length);
       for(var i = 0; i < nr; i++) {
@@ -628,14 +632,16 @@ function renderMatch(params) {
           a[i].sub ? ' (SUB)' : '' : '';
         var hsub = i < h.length ?
           h[i].sub ? ' (SUB)' : '' : '';
+        var aRank = getIPR(a, i);
+        var hRank = getIPR(h, i);
         rows.push({
           away: i < a.length ? ac + a[i].name + asub : '',
-          away_rank: i < a.length ? IPR.forName(a[i].name) : 0,
+          away_rank: aRank || '',
           home: i < h.length ? hc + h[i].name + hsub : '',
-          home_rank: i < h.length ? IPR.forName(h[i].name) : 0
+          home_rank: hRank || ''
         });
-        away_ipr += i < a.length ? IPR.forName(a[i].name) : 0;
-        home_ipr += i < h.length ? IPR.forName(h[i].name) : 0;
+        away_ipr += aRank;
+        home_ipr += hRank;
       }
       break;
     default:
