@@ -2,6 +2,7 @@ var fs = require('fs');
 var util = require('../lib/util');
 var CONST = require('../constants');
 var players = require('./players');
+var IPR = require('./ratings');
 
 // TODO: Refactor in conjunction with splitting venues.js
 var venues = require('./venues');
@@ -90,7 +91,7 @@ function loadAll() {
     if(m) {
       m.key = key; //Fixes when I copy matches without changing key.
       _map[key] = m;
-// console.log("list["+i+"]:",m.key);
+      // console.log("list["+i+"]:",m.key);
     }
   }
 }
@@ -158,8 +159,23 @@ function isAuth(ukey,list) {
 
 function Team(params) {
   this.name = params.name;
-  this.captains = [];
-  this.lineup = [];
+  this.captains = [
+    params.captain,
+    params.co_captain
+  ].filter(x => !!x).map(name => ({
+    key: players.makeKey(name),
+    name,
+  }));
+  this.lineup = (params.roster || []).map(({name}) => ({
+    // This is a little band-aid to make spawning matches easier.
+    // For example, it would be much easier to spawn a team vs team scrimmage.
+    // TODO: We should use a non-hash key.
+    key: players.makeKey(name),
+    name,
+    sub: false,
+    num_played: 0,
+    IPR: IPR.forName(name),
+  }));
 }
 
 Team.prototype = {
@@ -237,7 +253,6 @@ function Match(params) {
 
   this.venue = venue;
 
-
   this.away = new Team(params.away || { name: "Away Team" });
   this.home = new Team(params.home || { name: "Home Team" });
   this.rounds = makeRounds();
@@ -308,6 +323,8 @@ Match.prototype = {
       return callback("ERROR: Cannot add nothing.");
     }
 
+    // This is trying to figure out who the user is
+    // and if they are the same as the person to be added.
     var who = players.get(ukey);
     if(!who) { return callback("ERR: No player exists for " +ukey); }
     var hash  = players.makeKey(name);
@@ -379,10 +396,12 @@ Match.prototype = {
           console.log("Suppressing removal of captain " +p.key+ " == " +ukey);
         }
       }
+      // TODO: Why did I ever think listAdd was a good idea?
       listAdd(team.lineup,{
         key: p.key,
         name: p.name,
-        sub: isLeague ? !isRoster : false
+        sub: isLeague ? !isRoster : false,
+        IPR: IPR.forName(p.name),
       });
       team.ready = false;
       team.confirmed = false;
@@ -1186,6 +1205,7 @@ function gameDone(game, r) {
 }
 
 module.exports = {
+  Match,
   //TODO: Should probably add callbacks to get and all.
   get: function(key) {
     var match = _map[key];

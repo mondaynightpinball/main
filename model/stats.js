@@ -41,6 +41,8 @@ module.exports = {
     _map[key] = value;
     fs.writeFileSync(DATA_DIR + '/' + key, JSON.stringify(value,null,2));
   },
+  // TODO: Setup a watch to refresh the list after util/compute-stats
+  // Alternatively, just always load the list for each call.
   all: function() {
     var all = [];
     for(k in _map) {

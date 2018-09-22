@@ -22,7 +22,7 @@ function createMatches(params) {
 
     //TODO: Only create match if it didn't already exist.
     //if(matches.get(info.match_key)) .... Needs to move the key concat up.
-    var match = matches.create({
+    matches.create({
       ukey: CONST.ROOT, //TODO: Hard coded auth for now.
       //key: 'mnp-' +num+ '-' +week+ '-' +x.away_key+ '-' +x.home_key,
       key: x.match_key,
