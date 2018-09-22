@@ -636,9 +636,9 @@ function renderMatch(params) {
         var hRank = getIPR(h, i);
         rows.push({
           away: i < a.length ? ac + a[i].name + asub : '',
-          away_rank: aRank || '',
+          away_rank: aRank,
           home: i < h.length ? hc + h[i].name + hsub : '',
-          home_rank: hRank || ''
+          home_rank: hRank
         });
         away_ipr += aRank;
         home_ipr += hRank;
