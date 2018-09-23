@@ -37,17 +37,28 @@ const mockTieBreaker = module.exports = function(aKey, hKey, week) {
     venue,
   });
 
+  simulateMatch(match);
+
+  return match;
+};
+
+function simulateMatch(match) {
+  const {away, home} = match;
+
   // In order to best mock everything, we should
   // make all the calls that the router would.
   doPregame(match);
 
   // Round 1
-  // match.makePicks({
-  //
-  // })
+  doDoublesPicks(match, away);
+  // TODO: the response is almost the same logic as the picks.
+  //       We can probably roll those together with a param for
+  //       picks or response.
+  doDoublesResponse(match, home);
 
-  return match;
-};
+  playGames(match);
+  confirmRound(match);
+}
 
 function doPregame(match) {
   const {away, home} = match;
@@ -71,10 +82,99 @@ function doPregame(match) {
     ukey: home.captains[0].key,
     side: 'home'
   });
+}
 
+function confirmRound(match) {
+  const {away, home} = match;
+
+  console.log('confirmRound...');
+
+  // TODO: More left/right pain! What a horrible design.
+  const left  = match.round % 2 === 0 ? home : away;
+  const right = match.round % 2 === 0 ? away : home;
+
+  match.confirmScores({
+    ukey: left.captains[0].key,
+    side: 'left',
+  }, (err) => console.log(err));
+
+  match.confirmScores({
+    ukey: right.captains[0].key,
+    side: 'right',
+  }, (err) => console.log(err));
+}
+
+// machine.n
+// player_x.n
+function doDoublesPicks(match, team) {
+  const players = team.lineup.sort((a,b) => {
+    if(a.num_played < b.num_played) return -1;
+    if(a.num_played > b.num_played) return 1;
+    return 0;
+  }).slice(0, 8);
+  const machines = match.venue.machines.slice(0, 4);
+  match.makePicks({
+    ukey: team.captains[0].key,
+    state: match.state,
+    round: match.round,
+    picks: Object.assign({},
+      machines.reduce((set, m, i) => {
+        set[`machine.${i + 1}`] = m;
+        return set;
+      }, {}),
+      players.reduce((set, p, i) => {
+        const num = [1, 3][i % 2];
+        const game = Math.floor(i / 2) + 1;
+        set[`player_${num}.${game}`] = p.key;
+        return set;
+      }, {})
+    ),
+  });
+}
+
+function doDoublesResponse(match, team) {
+  const players = team.lineup.sort((a,b) => {
+    if(a.num_played < b.num_played) return -1;
+    if(a.num_played > b.num_played) return 1;
+    return 0;
+  }).slice(0, 8);
+
+  match.makePicks({
+    ukey: team.captains[0].key,
+    state: match.state,
+    round: match.round,
+    picks: Object.assign({},
+      players.reduce((set, p, i) => {
+        const num = [2, 4][i % 2];
+        const game = Math.floor(i / 2) + 1;
+        set[`player_${num}.${game}`] = p.key;
+        return set;
+      }, {})
+    ),
+  });
+}
+
+function playGames(match) {
+  const round = match.getRound(match.round);
+
+  const slots = (round.n === 1 || round.n === 4) ? [1,2,3,4] : [1,2];
+  const update = slots.reduce((map, slot) => {
+    map[`score_${slot}`] = `${100 * slot}`; // Hate that it only accepts string.
+    return map;
+  }, {});
+
+  // I'm going to make player 2 (and 4) win every game.
+  round.games.forEach(game => {
+    match.reportScores({
+      ukey: game.player_1,
+      n: game.n,
+      round: round.n,
+      update
+    });
+  });
 }
 
 const [away, home, week] = process.argv.slice(2);
 console.log({away, home, week});
 const match = mockTieBreaker(away, home, week);
-console.log(match);
+console.log(JSON.stringify(match, null , 2));

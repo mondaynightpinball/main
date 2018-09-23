@@ -534,6 +534,7 @@ Match.prototype = {
   },
   // ------------------ MAKE PICKS -------------------------
   makePicks: function(params,callback) {
+    console.log('makePicks', params);
     //Verify that the incoming picks are from the valid state.
     var st = params.state;
     if(!st || st != this.state) {
@@ -559,6 +560,7 @@ Match.prototype = {
       //team, and posting picks for this.round and this.state.
       // TODO: Seems like a bad idea to automatically write to the actual games objects.
       var games = this.getRound().games;
+      console.log(games);
       for(prop in params.picks) {
         var x = params.picks[prop];
         if(x.length > 0) {
@@ -686,7 +688,7 @@ Match.prototype = {
 
       this.save();
       if(callback) callback(errors,this);
-      else if(errors) throw new Error(errors);
+      else if(errors && errors.length > 0) throw new Error(JSON.stringify(errors));
     }
   },
   // ----------------- CALC POINTS -------------------------
@@ -879,6 +881,8 @@ Match.prototype = {
       }
     }
 
+    console.log(game);
+
     //TODO: if(!modified)
     delete round.left_confirmed;
     delete round.right_confirmed;
@@ -915,7 +919,7 @@ Match.prototype = {
 
     //Save changes to the match and callback.
     this.save();
-    callback(null,this);
+    if(callback) callback(null,this);
   },
   confirmScores: function(params,callback) {
     console.log("confirmScores():",params);
@@ -1003,7 +1007,7 @@ Match.prototype = {
       }
     };
     this.save();
-    callback(null,this);
+    if(callback) callback(null,this);
   },
   /** Method to see if a match is complete. */
   isDone: function() {
