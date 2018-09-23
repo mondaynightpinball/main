@@ -78,6 +78,12 @@ function simulateMatch(match) {
   confirmRound(match);
 }
 
+function byNumPlayed(a, b) {
+  if(a.num_played < b.num_played) return -1;
+  if(a.num_played > b.num_played) return 1;
+  return 0;
+}
+
 function doPregame(match) {
   const {away, home} = match;
 
@@ -114,22 +120,24 @@ function confirmRound(match) {
   match.confirmScores({
     ukey: left.captains[0].key,
     side: 'left',
-  }, (err) => console.log(err));
+  }, (err) => err && console.log(err));
 
   match.confirmScores({
     ukey: right.captains[0].key,
     side: 'right',
-  }, (err) => console.log(err));
+  }, (err) => err && console.log(err));
+
+  // If we never request the points, the counts are not done.
+  // That's a whacky flaw in the system, but because getPoints
+  // is called pretty frequently, it's not apparent.
+  match.getPoints();
 }
 
 // machine.n
 // player_x.n
 function doDoublesPicks(match, team) {
-  const players = team.lineup.sort((a,b) => {
-    if(a.num_played < b.num_played) return -1;
-    if(a.num_played > b.num_played) return 1;
-    return 0;
-  }).slice(0, 8);
+  const players = team.lineup.sort(byNumPlayed).slice(0, 8);
+  console.log(team.lineup);
   const machines = match.venue.machines.slice(0, 4);
   match.makePicks({
     ukey: team.captains[0].key,
@@ -151,11 +159,7 @@ function doDoublesPicks(match, team) {
 }
 
 function doDoublesResponse(match, team) {
-  const players = team.lineup.sort((a,b) => {
-    if(a.num_played < b.num_played) return -1;
-    if(a.num_played > b.num_played) return 1;
-    return 0;
-  }).slice(0, 8);
+  const players = team.lineup.sort(byNumPlayed).slice(0, 8);
 
   match.makePicks({
     ukey: team.captains[0].key,
@@ -174,11 +178,8 @@ function doDoublesResponse(match, team) {
 
 // TODO: This is almost identical to doDoublesPicks. Perhaps find a way to merge them.
 function doSinglesPicks(match, team) {
-  const players = team.lineup.sort((a,b) => {
-    if(a.num_played < b.num_played) return -1;
-    if(a.num_played > b.num_played) return 1;
-    return 0;
-  }).slice(0, 7);
+  const players = team.lineup.sort(byNumPlayed).slice(0, 7);
+  console.log(team.lineup);
   const machines = match.venue.machines.slice(0, 7);
   match.makePicks({
     ukey: team.captains[0].key,
@@ -198,11 +199,7 @@ function doSinglesPicks(match, team) {
 }
 
 function doSinglesResponse(match, team) {
-  const players = team.lineup.sort((a,b) => {
-    if(a.num_played < b.num_played) return -1;
-    if(a.num_played > b.num_played) return 1;
-    return 0;
-  }).slice(0, 7);
+  const players = team.lineup.sort(byNumPlayed).slice(0, 7);
 
   match.makePicks({
     ukey: team.captains[0].key,
@@ -240,4 +237,4 @@ function playGames(match) {
 const [away, home, week] = process.argv.slice(2);
 console.log({away, home, week});
 const match = mockTieBreaker(away, home, week);
-console.log(JSON.stringify(match, null , 2));
+// console.log(JSON.stringify(match, null , 2));

@@ -714,6 +714,7 @@ Match.prototype = {
   },
   // ----------------- GET POINTS --------------------------
   //TODO: Consider rename getPoints -> getBoxscore
+  // TODO: The only way that coundGames() is called is through getPoints. That seems kind of whack.
   getPoints: function() {
     countGames(this);
     var points = { home: 0, away: 0, rounds: [] };
