@@ -49,13 +49,31 @@ function simulateMatch(match) {
   // make all the calls that the router would.
   doPregame(match);
 
-  // Round 1
-  doDoublesPicks(match, away);
   // TODO: the response is almost the same logic as the picks.
   //       We can probably roll those together with a param for
   //       picks or response.
-  doDoublesResponse(match, home);
 
+  // Round 1
+  doDoublesPicks(match, away);
+  doDoublesResponse(match, home);
+  playGames(match);
+  confirmRound(match);
+
+  // Round 2
+  doSinglesPicks(match, home);
+  doSinglesResponse(match, away);
+  playGames(match);
+  confirmRound(match);
+
+  // Round 3
+  doSinglesPicks(match, away);
+  doSinglesResponse(match, home);
+  playGames(match);
+  confirmRound(match);
+
+  // Round 4
+  doDoublesPicks(match, home);
+  doDoublesResponse(match, away);
   playGames(match);
   confirmRound(match);
 }
@@ -148,6 +166,51 @@ function doDoublesResponse(match, team) {
         const num = [2, 4][i % 2];
         const game = Math.floor(i / 2) + 1;
         set[`player_${num}.${game}`] = p.key;
+        return set;
+      }, {})
+    ),
+  });
+}
+
+// TODO: This is almost identical to doDoublesPicks. Perhaps find a way to merge them.
+function doSinglesPicks(match, team) {
+  const players = team.lineup.sort((a,b) => {
+    if(a.num_played < b.num_played) return -1;
+    if(a.num_played > b.num_played) return 1;
+    return 0;
+  }).slice(0, 7);
+  const machines = match.venue.machines.slice(0, 7);
+  match.makePicks({
+    ukey: team.captains[0].key,
+    state: match.state,
+    round: match.round,
+    picks: Object.assign({},
+      machines.reduce((set, m, i) => {
+        set[`machine.${i + 1}`] = m;
+        return set;
+      }, {}),
+      players.reduce((set, p, i) => {
+        set[`player_1.${i + 1}`] = p.key;
+        return set;
+      }, {})
+    ),
+  });
+}
+
+function doSinglesResponse(match, team) {
+  const players = team.lineup.sort((a,b) => {
+    if(a.num_played < b.num_played) return -1;
+    if(a.num_played > b.num_played) return 1;
+    return 0;
+  }).slice(0, 7);
+
+  match.makePicks({
+    ukey: team.captains[0].key,
+    state: match.state,
+    round: match.round,
+    picks: Object.assign({},
+      players.reduce((set, p, i) => {
+        set[`player_2.${i + 1}`] = p.key;
         return set;
       }, {})
     ),
