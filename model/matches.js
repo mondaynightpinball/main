@@ -473,7 +473,7 @@ Match.prototype = {
       this.round = 1;
     }
     this.save();
-    callback(null,this);
+    if(callback) callback(null,this);
   },
   // -------------------- TEAM READY ------------------------------
   teamReady: function(params,callback) {
@@ -494,7 +494,7 @@ Match.prototype = {
 
     team.ready = true;
     this.save();
-    callback(null, this);
+    if(callback) callback(null, this);
   },
   getRound: function(n) {
     var n = n || this.round;
@@ -622,24 +622,25 @@ Match.prototype = {
           if(!addPlayer(2,g.player_2)) picksReady = false;
           if(!addPlayer(4,g.player_4)) picksReady = false;
 
+          // NOTE: the order is reversed for games 2 and 3, or is it game 1?
           g = games[1];
           if(!addMachine(g.machine)) picksReady = false;
-          if(!addPlayer(2,g.player_2)) picksReady = false;
-          if(!addPlayer(4,g.player_4)) picksReady = false;
+          if(!addPlayer(1,g.player_1)) picksReady = false;
+          if(!addPlayer(3,g.player_3)) picksReady = false;
 
           g = games[2];
           if(!addMachine(g.machine)) picksReady = false;
-          if(!addPlayer(2,g.player_2)) picksReady = false;
-          if(!addPlayer(4,g.player_4)) picksReady = false;
+          if(!addPlayer(1,g.player_1)) picksReady = false;
+          if(!addPlayer(3,g.player_3)) picksReady = false;
         }
         if(this.step == 3) {
           let g = games[1];
-          if(!addPlayer(1,g.player_1)) picksReady = false;
-          if(!addPlayer(3,g.player_3)) picksReady = false;
+          if(!addPlayer(2,g.player_2)) picksReady = false;
+          if(!addPlayer(4,g.player_4)) picksReady = false;
 
           g = games[2];
-          if(!addPlayer(1,g.player_1)) picksReady = false;
-          if(!addPlayer(3,g.player_3)) picksReady = false;
+          if(!addPlayer(2,g.player_2)) picksReady = false;
+          if(!addPlayer(4,g.player_4)) picksReady = false;
         }
 
         if(picksReady) {
@@ -684,7 +685,8 @@ Match.prototype = {
       }
 
       this.save();
-      callback(errors,this);
+      if(callback) callback(errors,this);
+      else if(errors) throw new Error(errors);
     }
   },
   // ----------------- CALC POINTS -------------------------
@@ -1083,8 +1085,17 @@ function calcPoints(game, round) {
     game.score_13 = game.score_1;
     game.score_24 = game.score_2;
 
-    game.away_points = points[1],
-    game.home_points = points[0];
+    // A rule change in season 10 now has players on either side,
+    // depending on the game number.
+    if(game.n > 1) {
+      game.away_points = points[0],
+      game.home_points = points[1];
+    }
+    else {
+      // Away plays 2nd in only the first game.
+      game.away_points = points[1],
+      game.home_points = points[0];
+    }
   }
   else {
     return undefined;
@@ -1163,7 +1174,7 @@ function countGames(match) {
       }
     }
   }
-// console.log(map);
+  // console.log(map);
   for(i in match.away.lineup) {
     var p = match.away.lineup[i];
     var x = map[p.key] || 0;
@@ -1174,9 +1185,8 @@ function countGames(match) {
     var x = map[p.key] || 0;
     p.num_played = x;
   }
-// console.log(match.away.key,match.away.lineup);
-// console.log(match.home.key,match.home.lineup);
-
+  // console.log(match.away.key,match.away.lineup);
+  // console.log(match.home.key,match.home.lineup);
 }
 
 function roundDone(round) {
