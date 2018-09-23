@@ -760,6 +760,12 @@ console.log("GET /games ",req.params);
   var left  = order[0];
   var right = order[1];
 
+  // This hack deals with a season 10 rule change.
+  if(match.round === 5) {
+    left  = n > 1 ? match.away : match.home;
+    right = n > 1 ? match.home : match.away;
+  }
+
   //NOTE: left and right players are for if a game needs to be edited.
 
   left.lineup.sort(nameSort);
