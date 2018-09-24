@@ -560,7 +560,6 @@ Match.prototype = {
       //team, and posting picks for this.round and this.state.
       // TODO: Seems like a bad idea to automatically write to the actual games objects.
       var games = this.getRound().games;
-      console.log(games);
       for(prop in params.picks) {
         var x = params.picks[prop];
         if(x.length > 0) {
@@ -881,8 +880,6 @@ Match.prototype = {
         }
       }
     }
-
-    console.log(game);
 
     //TODO: if(!modified)
     delete round.left_confirmed;
