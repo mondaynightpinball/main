@@ -760,6 +760,12 @@ console.log("GET /games ",req.params);
   var left  = order[0];
   var right = order[1];
 
+  // This hack deals with a season 10 rule change.
+  if(match.round === 5) {
+    left  = n > 1 ? match.away : match.home;
+    right = n > 1 ? match.home : match.away;
+  }
+
   //NOTE: left and right players are for if a game needs to be edited.
 
   left.lineup.sort(nameSort);
@@ -813,8 +819,8 @@ console.log("GET /games ",req.params);
 });
 
 router.post('/games/:key.:round.:n/report', function(req,res) {
-console.log("POST /games... ",req.params);
-console.log("req.type:", req.get('Content-Type'));
+  console.log("POST /games... ",req.params);
+  console.log("req.type:", req.get('Content-Type'));
 
   var match = matches.get(req.params.key);
   var round = req.params.round;
@@ -823,22 +829,6 @@ console.log("req.type:", req.get('Content-Type'));
   if(!match) {
     return res.send("Unknown match: "+req.params.key);
   }
-
-  // NOTE: There isn't anymore prev or next button
-  // if(req.body.prev) {
-  //   console.log("PREV clicked...");
-  //   if(n > 1) {
-  //     return res.redirect('/games/'+req.params.key+'.'+round+'.'+(n-1));
-  //   }
-  //   else return res.redirect('/games/'+req.params.key+'.'+round+'.'+n);
-  // }
-  // if(req.body.next) {
-  //   console.log("NEXT clicked...");
-  //   if(n < NUM_GAMES[round-1]) {
-  //     return res.redirect('/games/'+req.params.key+'.'+round+'.'+(n+1));
-  //   }
-  //   else return res.redirect('/games/'+req.params.key+'.'+round+'.'+n);
-  // }
 
   match.reportScores({
     ukey:   req.user.key,
