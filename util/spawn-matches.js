@@ -17,11 +17,15 @@ const season = require('../model/seasons').get();
 const matches = require('../model/matches');
 const Match = matches.Match;
 
+const pad = (num) => {
+  return num < 10 ? `0${num}` : `${num}`;
+};
+
 const getOrder = (date) => {
   const s = [
     date.getFullYear(),
-    date.getMonth() + 1,
-    date.getDate() + 1
+    pad(date.getMonth() + 1),
+    pad(date.getDate() + 1)
   ].join('');
   return parseInt(s);
 };
@@ -31,10 +35,10 @@ const time = getOrder(now);
 
 const current = season.weeks.find(week => {
   const date = getOrder(new Date(week.date));
-  console.log('week: ', date, week.date);
-  console.log('today:', time);
-  console.log('diff:', date - time);
-  if (date >= time && date - time < 7) {
+  console.log('week: ', week.n, date, week.date);
+  console.log('today:  ', time);
+  console.log('diff:  ', date - time);
+  if (date >= time) {
     return true;
   }
 });
