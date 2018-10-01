@@ -694,6 +694,16 @@ Match.prototype = {
   // ----------------- CALC POINTS -------------------------
   // This allows us to recalc points after edits outside
   // of reportScores().
+  // TODO: Match.prototype.calcPoints is dead code.
+  // Furthermore, it's dangerous code because some
+  // matches might change their saved points on rule
+  // changes. The key example is the change from 10-2 to 10-3
+  // where tie breaker rounds are played on both sides of the
+  // board. The goal is to fix those matches, but someday
+  // we will want to integrate multiple rule sets and allow
+  // for those different formats. It would make sense to have a
+  // shape definition file for a match for each rule, and the
+  // rule would have a date range that it was in effect.
   calcPoints: function() {
     console.log("calcPoints() ...");
     for(i in this.rounds) {
@@ -735,10 +745,6 @@ Match.prototype = {
       var hsum = 0;
       for(var i = 0; i < round.games.length; i++) {
         var g = round.games[i];
-
-        //TODO: IMPORTANT HACK for round 5.
-        //  The home team plays first in all games
-        //  instead of away.
 
         asum += g.away_points || 0;
         hsum += g.home_points || 0;
@@ -1090,6 +1096,10 @@ function calcPoints(game, round) {
 
     // A rule change in season 10 now has players on either side,
     // depending on the game number.
+    // TODO: This is where problems would arise if a match were
+    //       to be recalc'd. It appears after s10 wk 3, the matches
+    //       from week 2 still seem to show the correct score, and
+    //       thus the same winner. But it still seems shaky.
     if(game.n > 1) {
       game.away_points = points[0],
       game.home_points = points[1];
