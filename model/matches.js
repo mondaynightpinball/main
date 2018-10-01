@@ -159,6 +159,7 @@ function isAuth(ukey,list) {
 
 function Team(params) {
   this.name = params.name;
+  this.key = params.key;
   this.captains = [
     params.captain,
     params.co_captain
@@ -1154,7 +1155,7 @@ function calcShared(scores) {
 }
 
 function countGames(match) {
-// console.log("countGames... for " +match.key);
+  // console.log("countGames... for " +match.key);
   var map = {};
   var incr = function(key) {
     var x = map[key] || 0;
@@ -1192,7 +1193,7 @@ function countGames(match) {
 }
 
 function roundDone(round) {
-//console.log("roundDone() round:",round);
+  //console.log("roundDone() round:",round);
   var games = round.games;
   var done = true;
   for(var i = 0; i < games.length; i++) {
