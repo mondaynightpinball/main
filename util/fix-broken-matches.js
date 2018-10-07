@@ -44,9 +44,24 @@ matches.all().forEach(match => {
     console.log(round);
   }
 
+    // for games 2 and 3, the away team should be playing first.
+    round.games.slice(1).forEach(game => {
+      // player_1 and player_3 should be away players.
+      if (home.lineup.find(p => p.key === game.player_1)) {
+        console.log('Home player in the 1 slot');
+        swap(game);
+      }
+      // player_2 and player_4 should be home players.
+      if (away.lineup.find(p => p.key === game.player_2)) {
+        console.log('Away player in the 2 slot');
+        swap(game);
+      }
+    });
+
+    match.calcPoints();
+    console.log(round);
+  }
+
 
   // match.save();
 });
-
-// TODO: Do we want to "fix" any tie breakers? It seems like
-// some games might flip their win/loss if we don't do something.
