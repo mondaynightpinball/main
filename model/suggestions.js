@@ -28,6 +28,10 @@ function getSuggestions(teams) {
   return Object.keys(all);
 }
 
+module.exports = {
+  getSuggestions
+};
+
 /* TEST
 const testTeams = ['PBR', 'DTP'];
 const sugs = getSuggestions(testTeams);

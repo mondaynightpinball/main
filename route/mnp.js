@@ -19,6 +19,7 @@ var venues = require('../model/venues');
 var matches = require('../model/matches');
 const IPR = require('../model/ratings');
 var players = require('../model/players');
+var { getSuggestions } = require('../model/suggestions');
 
 var base = fs.readFileSync('./template/base.html').toString();
 
@@ -411,7 +412,7 @@ function renderTeam(params) {
     canEdit: perms.canEdit,
     canRemove: perms.canRemove,
     canBegin: !team.ready && match.state == CONST.PREGAME && perms.canEdit && team.lineup.length > 7,
-    sugs: match.state == CONST.PREGAME ? JSON.stringify(IPR.getNames(),null,2) : '[]'
+    sugs: match.state == CONST.PREGAME ? JSON.stringify(getSuggestions([match.home.key, match.away.key]),null,2) : '[]'
   },{
     head: head,
     content: template
@@ -712,6 +713,10 @@ function renderMatch(params) {
     left_confirmed: round.left_confirmed,
     right_confirmed: round.right_confirmed,
     errors: errors,
+    // TODO: sugs can almost certainly be removed from here, because I'm
+    // pretty sure it's not used in any of the templates in this route.
+    // BUT...because of the lack of test coverage, I'm kind of scared to
+    // just remove it without deeper investigation.
     sugs: IPR.getNames(),
     labels: JSON.stringify(labels),
     rounds: points.rounds
