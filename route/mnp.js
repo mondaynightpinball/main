@@ -411,7 +411,7 @@ function renderTeam(params) {
     canEdit: perms.canEdit,
     canRemove: perms.canRemove,
     canBegin: !team.ready && match.state == CONST.PREGAME && perms.canEdit && team.lineup.length > 7,
-    sugs: match.state == CONST.PREGAME ? JSON.stringify(players.getSuggestions(),null,2) : '[]'
+    sugs: match.state == CONST.PREGAME ? JSON.stringify(IPR.getNames(),null,2) : '[]'
   },{
     head: head,
     content: template
@@ -712,7 +712,7 @@ function renderMatch(params) {
     left_confirmed: round.left_confirmed,
     right_confirmed: round.right_confirmed,
     errors: errors,
-    sugs: players.getSuggestions(),
+    sugs: IPR.getNames(),
     labels: JSON.stringify(labels),
     rounds: points.rounds
   }, {
@@ -730,7 +730,7 @@ var NUM_SCORES  = [4,2,2,4,2];
 var GAME_TYPES  = ['Doubles','Singles','Singles','Doubles','Shared Tie Breaker'];
 
 router.get('/games/:key.:round.:n',function(req,res) {
-console.log("GET /games ",req.params);
+  console.log("GET /games ",req.params);
   var ukey = req.user.key || 'ANON';  //TODO: have users.js set ANON
   var match = matches.get(req.params.key);
   if(!match) { return res.redirect('/'); }
