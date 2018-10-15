@@ -54,30 +54,9 @@ function getAll() {
   return results;
 }
 
-var sugs = [];
-//Load up the sugs.
-var sname = 'data/sugs.json';
-if(util.fileExists(sname)) {
-  console.log("Loading sugs from " +sname+ "  ...");
-  try {
-    sugs = JSON.parse(fs.readFileSync(sname));
-  } catch (err) {
-    // We don't really care, the default is already set.
-    console.log("Error reading sugs", err);
-  }
-}
-else {
-  console.log("No sugs file found: "+sname+ " Scanning players...");
-  //TODO Ideally we add sugs from as many points as we can collect.
-  var list = getAll();
-  for(i in list) {
-    var p = list[i];
-    sugs.push(p.name);
-  }
-}
-
 //TODO: load players from db? See hack at the bottom of the file.
 
+// TODO: We should be doing this on the client side!
 function passesMatch(params) {
   var p1 = params.pass || 'p1';
   var p2 = params.conf || 'p2';
@@ -256,9 +235,6 @@ module.exports = {
     A.shadows.put(player.key, params.pass);
     console.log("Password set for: " +player.key);
     callback(null,player);
-  },
-  getSuggestions: function() {
-    return sugs;
   },
   destroy: destroyPlayer
 };
