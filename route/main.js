@@ -28,6 +28,7 @@ router.use(require('./venues'));
 router.use(require('./mnp'));
 router.use(require('./league'));
 router.use(require('./machines'));
+router.use(require('./teams'));
 router.use(express.static('static'));
 
 module.exports = router;
