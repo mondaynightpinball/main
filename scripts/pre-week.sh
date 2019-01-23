@@ -15,14 +15,14 @@ git checkout master
 git pull origin master
 
 # TODO Find a way to make the script not season hard coded.
-cp season-10/playerdb.csv ../main/data/season-10/playerdb.csv
+cp season-11/playerdb.csv ../main/data/season-11/playerdb.csv
 
 cd /home/mnp/main
 
 # TODO: Consider a git pull for main.
 
 # Refresh the season.json
-# TODO season 10 is hard coded in the import season script.
+# TODO season 11 is hard coded in the import season script.
 node importers/import-season.js
 
 node util/spawn-matches.js
