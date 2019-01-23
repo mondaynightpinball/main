@@ -93,7 +93,7 @@ function createMatches(params) {
 }
 
 var params = {
-  key: 'season-10',
+  key: 'season-11',
   week: process.argv[2]
 };
 
