@@ -31,10 +31,11 @@
 {{/roster}}
 
 <table id="team_schedule" class="table">
-<tr><td colspan="4" class="header-row">Schedule</td></tr>
+<tr><td colspan="5" class="header-row">Schedule</td></tr>
 {{#schedule}}
 <tr>
-  <td>Wk {{week}}</td>
+  <td>{{week}}</td>
+  <td>{{date}}</td>
   <td>{{side}}</td>
   <td><a href="/teams/{{opp.key}}">{{opp.name}}</a></td>
   <td>{{#result}}<a href="/matches/{{key}}">{{.}}</a>{{/result}}</td>

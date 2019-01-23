@@ -97,8 +97,15 @@ router.get('/teams/:team_id',function(req,res) {
       result += ts + '-' +os;
     }
 
+    const [year, month, day] = [
+      w.date.slice(0, 4),
+      w.date.slice(4, 6),
+      w.date.slice(6, 8),
+    ];
+
     return {
       week: w.week,
+      date: `${month}-${day}-${year}`,
       side: w.side,
       opp:  w.opp,
       key: w.match_key,

@@ -121,6 +121,7 @@ for(let i in rows) {
     home.schedule.push({
       match_key: match.key,
       week: match.week,
+      date: match.date,
       side: 'vs',
       opp: {
         key: away.key,
@@ -130,6 +131,7 @@ for(let i in rows) {
     away.schedule.push({
       match_key: match.key,
       week: match.week,
+      date: match.date,
       side: '@',
       opp: {
         key: home.key,
