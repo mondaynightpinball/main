@@ -5,15 +5,29 @@
 
 <div class="container">
   <div class="form-group row">
-    <label for="name" class="col-sm-2 col-form-label">Name</label>
+    <label for="name" class="col-sm-2 col-form-label">Name:</label>
     <div class="col-sm-10">
-      <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="First Last">
+      <div class="notice">
+        Must be IFPA name, or full name that you would like to be known as under matchplay and IFPA
+      </div>
+      <input type="text" class="form-control" id="name" name="name" autocomplete="off" placeholder="Full IFPA Name">
     </div>
   </div>
   <div class="form-group row">
-    <label for="email" class="col-sm-2 col-form-label">Email</label>
+    <label for="email" class="col-sm-2 col-form-label">Email:</label>
     <div class="col-sm-10">
       <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+    </div>
+  </div>
+
+  <div class="signup-reason">
+    <div class="row">
+      <input type="radio" id="isLooking" name="signup_reason" value="looking"></input>
+      <label for="isLooking">I am looking for a team</label>
+    </div>
+    <div class="row">
+      <input type="radio" id="needAccount" name="signup_reason" value="account"></input>
+      <label for="needAccount">I have a team, signing up to get account</label>
     </div>
   </div>
 
@@ -22,6 +36,8 @@
     any location that has at least 8 machines, even if they don't have an MNP
     team yet. That will help us gauge where the next expansion teams might go.
   </div>
+
+  <!-- TODO: Toggle venue choice if player already has a team vs looking for one -->
 
   <div class="form-group row">
     <div class="col-sm-10">
