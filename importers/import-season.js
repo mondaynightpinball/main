@@ -151,10 +151,17 @@ for(let i in rows) {
       weeks[match.date] = week;
     }
 
-    //var venue = venues.get(home.venue);
     var venue = venues.get(match.venue);
-    //if(!venue) venue = { key: home.venue, name: home.venue };
-    if(!venue) venue = { key: match.venue, name: match.venue };
+
+    if(!venue) {
+      console.warn('Venue not found:', match.venue, match.key);
+
+      venue = venues.get(home.venue);
+
+      // If the venue is still undefined, there will be an error below,
+      // which is probably ok, because the matches.csv is not correct.
+      console.warn('Using:', venue.name);
+    }
 
     //HACK: Season 6 playoff hack to move a doubled up match to
     //an alternate location.
@@ -217,9 +224,7 @@ for(let k in keys) {
 var season = {
   key: 'season-' + num,
   teams: teams,
-//  matches: matches,
   weeks: list
 };
 
-// console.log(JSON.stringify(season,null,2));
 fs.writeFileSync(`${stem}/season.json`, JSON.stringify(season,null,2));

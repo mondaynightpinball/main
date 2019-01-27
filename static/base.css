@@ -38,7 +38,7 @@ body {
   overflow: auto;
 }
 #content ul, ol {
-  /*padding: 0;*/
+  padding: 20px;
 }
 /*
 TODO: Add different margin/class for wide screens.
