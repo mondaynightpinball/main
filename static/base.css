@@ -213,6 +213,11 @@ margin-left: 7px;
   display: none;
 }
 
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
 #serch {
   position: relative;
 }

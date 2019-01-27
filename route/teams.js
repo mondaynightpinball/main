@@ -9,10 +9,31 @@ const seasons = require('../model/seasons');
 const matches = require('../model/matches'); //For standings
 const stats = require('../model/stats');
 const IPR = require('../model/ratings');
+const { ROOT } = require('../constants');
+
+// TODO: Look into getSuggestions in the context of rosters.
+//  There appears to be some match specific filtering built in
+//  that should be abstracted out.
+// const { getSuggestions } = require('../model/suggestions');
+
+// TODO: It might be good to verify eligibility of a player to be added.
+const getSuggestions = () => IPR.getNames();
+
+require('dotenv').load();
 
 const base = fs.readFileSync('./template/base.html').toString();
 
 const byName = (a,b) => [a.name, b.name].sort()[0] === a.name ? -1 : 1;
+
+const admins = [
+  ROOT,
+  process.env.LEAGUE_ADMINS.split(',')
+];
+
+router.use(function(req,res,next) {
+  req.user.isLeagueAdmin = !!admins.find(k => k === req.user.key);
+  next();
+});
 
 router.get('/teams',function(req,res) {
   const season = seasons.get();
@@ -42,13 +63,19 @@ router.get('/teams',function(req,res) {
   res.send(html);
 });
 
-router.get('/teams/:team_id',function(req,res) {
+function getTeam(key) {
   const season = seasons.get(); //TODO Allow other seasons.
+  const team = season.teams[key];
+  return team;
+}
+
+router.get('/teams/:team_id',function(req,res) {
+  console.log('GET team', req.params.team_id, req.user);
+  // const season = seasons.get(); //TODO Allow other seasons.
   const template = fs.readFileSync('./template/team.html').toString();
 
   //Does the team exist in the season.
-  const tk = req.params.team_id;
-  const team = season.teams[tk];
+  const team = getTeam(req.params.team_id);
   if(!team) { return res.redirect('/teams'); }
 
   const venue = venues.get(team.venue);
@@ -114,7 +141,9 @@ router.get('/teams/:team_id',function(req,res) {
   });
 
   const html = mustache.render(base,{
-    key: team.key,
+    canAdd: req.user.isLeagueAdmin,
+    canRemove: req.user.isLeagueAdmin,
+    team_id: team.key,
     title: team.name,
     name: team.name,
     division: team.division,
@@ -123,12 +152,82 @@ router.get('/teams/:team_id',function(req,res) {
     co_captain: team.co_captain,
     team_rating: teamRating,
     roster: lineup,
-    schedule: weeks
+    schedule: weeks,
+    sugs: JSON.stringify(getSuggestions(), null, 2),
   }, {
     content: template
   });
 
   res.send(html);
+});
+
+router.post('/teams/:team_id/roster/add', function(req,res) {
+  // TODO: Who is trying to do this, and are they allowed?
+
+  const team = getTeam(req.params.team_id);
+  // TODO: It might be better to return a 500 or something, but since we
+  //  are returning rendered html, that's not as good a model.
+  if(!team) { return res.redirect('/teams'); }
+
+  if(!req.body || !req.body.name || !req.body.role) {
+    // TODO: redirect to /teams/:team_id, but with an error msg.
+    console.log('Jacked up or missing body');
+  }
+
+  // TODO: Do we need to lookup the player in some way?
+  //  If the player wasn't in the suggestions, it may be
+  //  difficult to validate anyways.
+
+  const { name, role } = req.body;
+
+  // TODO: What happens if role is already taken?
+
+  switch(role) {
+    case 'P':
+      // No need to do anything special.
+    case 'A':
+      // TODO: Is these supposed to be a player object, key, name? Check the json
+      team.co_captain = name;
+    case 'C':
+      team.captain = name;
+  }
+
+  // Is the player already on the team?
+  if(!team.roster.find(p => p.name === name)) {
+    // TODO: We likely do need some kind of object shape here.
+    team.roster.push({ name });
+  }
+
+  // TODO: save changes
+
+  // TODO: Redirect with a success msg (but first need to support messages)
+  res.redirect(`/teams/${team.key}`);
+});
+
+router.post('/teams/:team_id/roster/remove', function(req,res) {
+  console.log('POST remove', req.params, req.body);
+  // TODO: Check permissions
+
+  const team = getTeam(req.params.team_id);
+
+  // TODO: It might be better to return a 500 or something, but since we
+  //  are returning rendered html, that's not as good a model.
+  if(!team) { return res.redirect('/teams'); }
+
+  if(!req.body || !req.body.key) {
+    console.log('Jacked up on roster/remove');
+  }
+
+  // Does the team even have this player?
+  // TODO: This is a little funky, maybe cleanup/refactor
+  const roster = team.roster.filter(p => makeKey(p.name) !== req.body.key);
+
+  team.roster = roster;
+
+  // TODO: save changes
+
+  // TODO: Redirect with a success msg (but first need to support messages)
+  res.redirect(`/teams/${team.key}`);
 });
 
 module.exports = router;

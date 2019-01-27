@@ -1,5 +1,5 @@
-var players = require('../model/players');
+const makeKey = require('../lib/make-key');
 
 var name = process.argv[2];
 
-console.log(players.makeKey(name));
+console.log(makeKey(name));
