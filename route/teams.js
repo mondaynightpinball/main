@@ -114,6 +114,7 @@ router.get('/teams/:team_id',function(req,res) {
   });
 
   const html = mustache.render(base,{
+    key: team.key,
     title: team.name,
     name: team.name,
     division: team.division,
