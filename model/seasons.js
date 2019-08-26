@@ -4,15 +4,13 @@ var fs = require('fs');
 
 function loadSeason(key) {
   var fn = 'data/'+key+'/season.json';
-  // TODO: Maybe use try-catch on loading seasons.
-  var buf;
+  var season;
   try {
-    buf = fs.readFileSync(fn);
+    season = JSON.parse(fs.readFileSync(fn));
   } catch (err) {
     console.log('Problem loading',key,err);
     return;
   }
-  var season = JSON.parse(buf);
 
   season.currentWeek = function() {
     console.log("NOT IMPLEMENTED! currentWeek()");
@@ -40,7 +38,7 @@ function loadSeason(key) {
   return season;
 }
 
-var CURRENT = 'season-11';
+var CURRENT = 'season-12';
 
 var _map = {
   // Not sure why we would need to load other seasons like this.
