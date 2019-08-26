@@ -17,11 +17,19 @@ const season = require('../model/seasons').get();
 const matches = require('../model/matches');
 const Match = matches.Match;
 
+const weekOverride = process.argv[2];
+
 const pad = (num) => {
   return num < 10 ? `0${num}` : `${num}`;
 };
 
+const DAY_IN_MS = 1000 * 60 * 60 * 24;
+
 const getOrder = (date) => {
+  return date.getTime() / DAY_IN_MS;
+}
+
+const getOrder_nonLinear = (date) => {
   const s = [
     date.getFullYear(),
     pad(date.getMonth() + 1),
@@ -33,19 +41,30 @@ const getOrder = (date) => {
 const now = new Date();
 const time = getOrder(now);
 
-const current = season.weeks.find(week => {
-  const date = getOrder(new Date(week.date));
-  console.log('week: ', week.n, date, week.date);
-  console.log('today:  ', time);
-  console.log('diff:  ', date - time);
-  if (date >= time) {
-    return true;
-  }
-});
+let current;
+
+if (weekOverride) {
+  current = season.weeks.find(week => week.n == weekOverride);
+} else {
+  // TODO: Don't assume that weeks are already sorted.
+  current = season.weeks.find(week => {
+    const date = getOrder(new Date(week.date));
+    const diff = date - time;
+    console.log('week: ', week.n, date, week.date);
+    console.log('today:  ', time);
+    console.log('diff:  ', diff);
+    if (date >= time) {
+      return true;
+    }
+  });
+}
 
 const { code, date } = current;
 
+console.log('spawing', current);
+
 current.matches
+  // Filter to only matches not already created. Safety against overwrite.
   .filter(({match_key}) => !matches.get(match_key))
   .map(info => {
     console.log(info);

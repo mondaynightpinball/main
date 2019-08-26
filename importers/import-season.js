@@ -63,6 +63,8 @@ codes[91] = 'WC';
 codes[92] = 'SF';
 codes[93] = 'FNL';
 
+codes['S'] = 'SCRM';
+
 //SECOND, Load all the players and assign them to their teams.
 rows = csv.load(stem + 'playerdb.csv');
 
