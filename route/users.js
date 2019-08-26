@@ -156,6 +156,12 @@ router.get('/signup',function(req,res) {
 router.post('/signup',function(req,res) {
 
   req.body.timestamp = Date.now();
+
+  if(!req.body.name || req.body.name.trim().length === 0) {
+    // TODO: Include error on redirect.
+    return res.redirect('/signup');
+  }
+
   var json = JSON.stringify(req.body, null, 2);
   var key = util.digest(json);
 
