@@ -22,7 +22,7 @@ cd /home/mnp/main
 # TODO: Consider a git pull for main.
 
 # Refresh the season.json
-# TODO season 11 is hard coded in the import season script.
+# TODO season 12 is hard coded in the import season script.
 node importers/import-season.js
 
 node util/spawn-matches.js
