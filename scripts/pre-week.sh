@@ -15,7 +15,7 @@ git checkout master
 git pull origin master
 
 # TODO Find a way to make the script not season hard coded.
-cp season-11/playerdb.csv ../main/data/season-11/playerdb.csv
+cp season-12/playerdb.csv ../main/data/season-12/playerdb.csv
 
 cd /home/mnp/main
 
