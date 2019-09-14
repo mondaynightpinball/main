@@ -27,7 +27,11 @@ const byName = (a,b) => [a.name, b.name].sort()[0] === a.name ? -1 : 1;
 
 const admins = [
   ROOT,
-  process.env.LEAGUE_ADMINS.split(',')
+  // TODO: What bad happens if the env doesn't exist?
+  // TODO: What if there are no admins (empty string)?
+  // My guess is that the first call to teams.js would crash
+  // the server.
+  ...process.env.LEAGUE_ADMINS.split(',')
 ];
 
 router.use(function(req,res,next) {
@@ -71,7 +75,6 @@ function getTeam(key) {
 
 router.get('/teams/:team_id',function(req,res) {
   console.log('GET team', req.params.team_id, req.user);
-  // const season = seasons.get(); //TODO Allow other seasons.
   const template = fs.readFileSync('./template/team.html').toString();
 
   //Does the team exist in the season.
@@ -162,7 +165,13 @@ router.get('/teams/:team_id',function(req,res) {
 });
 
 router.post('/teams/:team_id/roster/add', function(req,res) {
-  // TODO: Who is trying to do this, and are they allowed?
+  console.log('POST add', req.params, req.body);
+  if(!req.user.isLeagueAdmin) {
+    console.warn('No authorized to edit rosters:', req.user);
+    // TODO: Include error msg with redirect
+    res.redirect(`/teams/${req.params.team_id}`);
+    return;
+  }
 
   const team = getTeam(req.params.team_id);
   // TODO: It might be better to return a 500 or something, but since we
@@ -206,7 +215,12 @@ router.post('/teams/:team_id/roster/add', function(req,res) {
 
 router.post('/teams/:team_id/roster/remove', function(req,res) {
   console.log('POST remove', req.params, req.body);
-  // TODO: Check permissions
+  if(!req.user.isLeagueAdmin) {
+    console.warn('No authorized to edit rosters:', req.user);
+    // TODO: Include error msg with redirect
+    res.redirect(`/teams/${req.params.team_id}`);
+    return;
+  }
 
   const team = getTeam(req.params.team_id);
 
