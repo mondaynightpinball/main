@@ -1,24 +1,25 @@
-var fs = require('fs');
-var CONST = require('../constants');
-var express = require('express');
-var mustache = require('mustache');
+const fs = require('fs');
+const CONST = require('../constants');
+const express = require('express');
+const mustache = require('mustache');
 
-var machines = require('../model/machines');
-var venues = require('../model/venues');
+const machines = require('../model/machines');
+const venues = require('../model/venues');
+const seasons = require('../model/seasons');
 
-var base = fs.readFileSync('./template/base.html').toString();
+const base = fs.readFileSync('./template/base.html').toString();
 
-var router = express.Router();
+const router = express.Router();
 
 router.get('/venues',function(req,res) {
-  var template = fs.readFileSync('./template/venues.html').toString();
+  const template = fs.readFileSync('./template/venues.html').toString();
 
-  var ukey = req.user.key || 'ANON';
+  const ukey = req.user.key || 'ANON';
 
   //TODO: Change hard coded canCreate
-  var canCreate = CONST.ROOT == ukey;
+  const canCreate = CONST.ROOT == ukey;
 
-  var list = venues.current();
+  const list = venues.current();
   // console.log('before sort:',list);
 
   list.sort(function(a,b) {
@@ -26,7 +27,7 @@ router.get('/venues',function(req,res) {
   });
   // console.log('after sort:',list);
 
-  var html = mustache.render(base,{
+  const html = mustache.render(base,{
     title: 'Venues',
     venues: list,
     canCreate: canCreate
@@ -38,15 +39,15 @@ router.get('/venues',function(req,res) {
 });
 
 router.get('/venues/create',function(req,res) {
-  var ukey = req.user.key || 'ANON';
+  const ukey = req.user.key || 'ANON';
   if(ukey != CONST.ROOT) {
     //Boot back somewhere else.
 console.log("CREATE attempted by non-authorized user ",ukey);
     return res.redirect('/venues');
   }
 
-  var template = fs.readFileSync('./template/venue_create.html').toString();
-  var html = mustache.render(base,{
+  const template = fs.readFileSync('./template/venue_create.html').toString();
+  const html = mustache.render(base,{
     title: 'Create Venue'
     //TODO: Include list of venue keys to avoid collision?
   },{
@@ -57,7 +58,7 @@ console.log("CREATE attempted by non-authorized user ",ukey);
 });
 
 router.post('/venues/create',function(req,res) {
-  var ukey = req.user.key || 'ANON';
+  const ukey = req.user.key || 'ANON';
   if(ukey != CONST.ROOT) {
     //Boot back somewhere else.
 console.log("CREATE attempted by non-authorized user ",ukey);
@@ -75,14 +76,14 @@ console.log("CREATE attempted by non-authorized user ",ukey);
 });
 
 router.get('/venues/:key',function(req,res) {
-  var ukey = req.user.key || 'ANON';
+  const ukey = req.user.key || 'ANON';
 
   //TODO: What is ukey authorized to do?
-  var canAdd = CONST.ROOT == ukey;
-  var canRemove = CONST.ROOT == ukey;
-  // var canRemove = false;
+  const canAdd = CONST.ROOT == ukey;
+  const canRemove = CONST.ROOT == ukey;
+  // const canRemove = false;
 
-  var venue = venues.get(req.params.key);
+  const venue = venues.get(req.params.key);
   if(!venue) {
     //For invalid venues, just redirect to /venues
     return res.redirect('/venues');
@@ -91,21 +92,21 @@ router.get('/venues/:key',function(req,res) {
 // console.log("name:",venue.name);
 // console.log("key:",venue.key);
 
-  var name = venue.name;
-  var key = venue.key;
+  const name = venue.name;
+  const key = venue.key;
 
-  var list = [];
+  const list = [];
   for(i in venue.machines) {
-    var mk = venue.machines[i];
-    var m = machines.get(mk);
+    const mk = venue.machines[i];
+    const m = machines.get(mk);
     if(m) list.push(m);
     else list.push({ key: mk, name: mk});
   }
 
   list.sort((a,b) => [a.name, b.name].sort()[0] == a.name ? -1 : 1);
 
-  var template = fs.readFileSync('./template/venue.html').toString();
-  var html = mustache.render(base,{
+  const template = fs.readFileSync('./template/venue.html').toString();
+  const html = mustache.render(base,{
     title: name,
     canAdd: canAdd,
     canRemove: canRemove,
@@ -121,18 +122,41 @@ router.get('/venues/:key',function(req,res) {
 
 });
 
+const canEdit = (venue, user) => {
+  // ROOT can always edit
+  if(user.key === CONST.ROOT) {
+    return true;
+  }
+  // See if user is a captain at the venue.
+  const {teams} = seasons.get();
+  let isHomeCaptain = false;
+
+  Object.keys(teams)
+    .filter(tk => (teams[tk].key === venue.key))
+    .map(tk => teams[tk])
+    .forEach(team => {
+      if(makeKey(team.captain)) === user.key) {
+        isHomeCaptain = true;
+      }
+      if(makeKey(team.co_captain)) === user.key) {
+        isHomeCaptain = true;
+      }
+    });
+
+  return isHomeCaptain;
+};
+
 router.post('/venues/:key/add',function(req,res) {
-  var venue = venues.get(req.params.key);
+  const venue = venues.get(req.params.key);
   if(!venue) {
     //For invalid venues, just redirect to /venues
     return res.redirect('/venues');
   }
-  var ukey = req.user.key || 'ANON';
-  if(ukey != CONST.ROOT) {
+  if(!canEdit(venue, req.user)) {
     return res.redirect('/venues/'+req.params.key);
   }
 
-  var mkey = req.body.mkey;
+  const mkey = req.body.mkey;
   if(mkey) {
     venue.addMachine(mkey);
   }
@@ -141,17 +165,16 @@ router.post('/venues/:key/add',function(req,res) {
 });
 
 router.post('/venues/:key/remove',function(req,res) {
-  var venue = venues.get(req.params.key);
+  const venue = venues.get(req.params.key);
   if(!venue) {
     //For invalid venues, just redirect to /venues
     return res.redirect('/venues');
   }
-  var ukey = req.user.key || 'ANON';
-  if(ukey != CONST.ROOT) {
+  if(!canEdit(venue, req.user)) {
     return res.redirect('/venues/'+req.params.key);
   }
 
-  var mkey = req.body.mkey;
+  const mkey = req.body.mkey;
   if(mkey) {
     venue.removeMachine(mkey);
   }
