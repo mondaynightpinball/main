@@ -189,8 +189,6 @@ router.post('/teams/:team_id/roster/add', function(req,res) {
 
   const { name, role } = req.body;
 
-  // TODO: What happens if role is already taken?
-
   switch(role) {
     case 'P':
       // No need to do anything special.
@@ -208,7 +206,7 @@ router.post('/teams/:team_id/roster/add', function(req,res) {
     team.roster.push({ name });
   }
 
-  // TODO: save changes
+  seasons.get().save();
 
   // TODO: Redirect with a success msg (but first need to support messages)
   res.redirect(`/teams/${team.key}`);
@@ -236,7 +234,7 @@ router.post('/teams/:team_id/roster/remove', function(req,res) {
 
   team.roster = roster;
 
-  // TODO: save changes
+  seasons.get().save();
 
   // TODO: Redirect with a success msg (but first need to support messages)
   res.redirect(`/teams/${team.key}`);
