@@ -213,6 +213,11 @@ margin-left: 7px;
   display: none;
 }
 
+.flex-row {
+  display: flex;
+  align-items: center;
+}
+
 .notice {
   font-style: italic;
   color: #449d44;

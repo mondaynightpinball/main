@@ -12,6 +12,14 @@ function loadSeason(key) {
     return;
   }
 
+  season.save = function() {
+    try {
+      fs.writeFileSync(fn, JSON.stringify(season, null, 2));
+    } catch (err) {
+      console.log('Error saving',key,err);
+    }
+  }
+
   season.currentWeek = function() {
     console.log("NOT IMPLEMENTED! currentWeek()");
     //TODO: Compare Date.now() with each week.

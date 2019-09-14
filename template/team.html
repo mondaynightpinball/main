@@ -1,3 +1,4 @@
+<a href="/teams">Teams</a> : {{team_id}}
 <table id="team_info">
 <tr><td>Name:</td><td><b>{{name}}</b></td></tr>
 <tr><td>Venue:</td><td>{{venue}}</td></tr>
@@ -8,6 +9,62 @@
 <tr><td>&nbsp;</td></tr>
 </table>
 
+{{#canAdd}}
+<form action="/teams/{{team_id}}/roster/add" method="POST">
+<div class="card">
+  <div class="flex-row">
+    <label>Name:</label>
+    <div id="search">
+      <input type="text" class="form-control" id="name" name="name" placeholder="Player Name" autocomplete="off">
+      <div id="sugs" class="hidden">
+      </div>
+    </div>
+  </div>
+  <div class="flex-row">
+    <label>Role:</label>
+    <div>
+      <select class="form-control" name="role">
+        <option value="P">Player</option>
+        <option value="C">Captain</option>
+        <option value="A">Co-Captain</option>
+      </select>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary btn-sm">ADD PLAYER</button>
+</div>
+</form>
+
+<script>
+const sugs = {{&sugs}};
+
+$(document).ready(function() {
+  $('#name').keyup((event) => {
+    const container = $('#sugs');
+    const q = event.target.value;
+    const list = sugs.filter(name => {
+      return name.toUpperCase().includes(q.toUpperCase());
+    });
+    if(!q || q.length == 0 || list.length == 0) {
+      container.addClass('hidden');
+      return;
+    }
+    container.empty();
+    list.forEach((name, i) => {
+      const row = $('<div>' +name+ '</div>');
+      row.click(() => {
+        $('#name').val(name);
+        container.addClass('hidden');
+      });
+      if(i % 2 == 0) row.addClass('stripe');
+      container.append(row);
+    });
+    container.removeClass('hidden');
+  });
+});
+</script>
+
+{{/canAdd}}
+
 <table id="team_roster" class="table">
 <tr class="header-row">
   <th>Roster ({{roster.length}} Players)</th>
@@ -15,6 +72,7 @@
   <th class="text-xs-center">M</th>
   <th>PPM</th>
   <th>POPS</th>
+  <th></th>
 </tr>
 {{#roster}}
 <tr>
@@ -27,14 +85,24 @@
   <td class="text-xs-center">{{num_matches}}</td>
   <td>{{ppm}}</td>
   <td>{{pops}}</td>
+  {{#canRemove}}
+  <td class="text-xs-right">
+  <form action="/teams/{{team_id}}/roster/remove" method="POST">
+  <input type="hidden" name="key" value="{{key}}">
+  <button type="submit" class="btn btn-secondary btn-sm">X</button>
+  </form>
+  </td>
+  {{/canRemove}}
+
 </tr>
 {{/roster}}
 
 <table id="team_schedule" class="table">
-<tr><td colspan="4" class="header-row">Schedule</td></tr>
+<tr><td colspan="5" class="header-row">Schedule</td></tr>
 {{#schedule}}
 <tr>
-  <td>Wk {{week}}</td>
+  <td>{{week}}</td>
+  <td>{{date}}</td>
   <td>{{side}}</td>
   <td><a href="/teams/{{opp.key}}">{{opp.name}}</a></td>
   <td>{{#result}}<a href="/matches/{{key}}">{{.}}</a>{{/result}}</td>
