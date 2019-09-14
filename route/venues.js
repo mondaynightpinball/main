@@ -3,6 +3,7 @@ const CONST = require('../constants');
 const express = require('express');
 const mustache = require('mustache');
 
+const makeKey = require('../lib/make-key');
 const machines = require('../model/machines');
 const venues = require('../model/venues');
 const seasons = require('../model/seasons');
@@ -42,7 +43,7 @@ router.get('/venues/create',function(req,res) {
   const ukey = req.user.key || 'ANON';
   if(ukey != CONST.ROOT) {
     //Boot back somewhere else.
-console.log("CREATE attempted by non-authorized user ",ukey);
+    console.log("CREATE attempted by non-authorized user ",ukey);
     return res.redirect('/venues');
   }
 
@@ -58,10 +59,11 @@ console.log("CREATE attempted by non-authorized user ",ukey);
 });
 
 router.post('/venues/create',function(req,res) {
+  // NOTE: Intentionally not allowing anyone but ROOT to create a venue
   const ukey = req.user.key || 'ANON';
   if(ukey != CONST.ROOT) {
     //Boot back somewhere else.
-console.log("CREATE attempted by non-authorized user ",ukey);
+    console.log("CREATE attempted by non-authorized user ",ukey);
     return res.redirect('/venues');
   }
 
@@ -75,22 +77,43 @@ console.log("CREATE attempted by non-authorized user ",ukey);
 
 });
 
+const canEdit = (venue, user) => {
+  // ROOT can always edit
+  if(user.key === CONST.ROOT) {
+    return true;
+  }
+  // See if user is a captain at the venue.
+  const {teams} = seasons.get();
+  let isHomeCaptain = false;
+
+  Object.keys(teams)
+    .filter(tk => (teams[tk].venue === venue.key))
+    .map(tk => teams[tk])
+    .forEach(team => {
+      console.log('captain:', team.captain, makeKey(team.captain));
+      console.log('co_captain:', team.co_captain, makeKey(team.co_captain));
+      if(makeKey(team.captain) === user.key) {
+        isHomeCaptain = true;
+      }
+      if(makeKey(team.co_captain) === user.key) {
+        isHomeCaptain = true;
+      }
+    });
+
+  return isHomeCaptain;
+};
+
 router.get('/venues/:key',function(req,res) {
-  const ukey = req.user.key || 'ANON';
-
-  //TODO: What is ukey authorized to do?
-  const canAdd = CONST.ROOT == ukey;
-  const canRemove = CONST.ROOT == ukey;
-  // const canRemove = false;
-
   const venue = venues.get(req.params.key);
   if(!venue) {
     //For invalid venues, just redirect to /venues
     return res.redirect('/venues');
   }
 
-// console.log("name:",venue.name);
-// console.log("key:",venue.key);
+  const canAdd = canEdit(venue, req.user);
+  const canRemove = canEdit(venue, req.user);
+
+  console.log('GET /venues/',venue.key, req.user.key, canAdd);
 
   const name = venue.name;
   const key = venue.key;
@@ -119,32 +142,7 @@ router.get('/venues/:key',function(req,res) {
   });
 
   res.send(html);
-
 });
-
-const canEdit = (venue, user) => {
-  // ROOT can always edit
-  if(user.key === CONST.ROOT) {
-    return true;
-  }
-  // See if user is a captain at the venue.
-  const {teams} = seasons.get();
-  let isHomeCaptain = false;
-
-  Object.keys(teams)
-    .filter(tk => (teams[tk].key === venue.key))
-    .map(tk => teams[tk])
-    .forEach(team => {
-      if(makeKey(team.captain)) === user.key) {
-        isHomeCaptain = true;
-      }
-      if(makeKey(team.co_captain)) === user.key) {
-        isHomeCaptain = true;
-      }
-    });
-
-  return isHomeCaptain;
-};
 
 router.post('/venues/:key/add',function(req,res) {
   const venue = venues.get(req.params.key);
