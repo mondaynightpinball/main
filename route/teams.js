@@ -194,16 +194,17 @@ router.post('/teams/:team_id/roster/add', function(req,res) {
   switch(role) {
     case 'P':
       // No need to do anything special.
+      break;
     case 'A':
-      // TODO: Is these supposed to be a player object, key, name? Check the json
       team.co_captain = name;
+      break;
     case 'C':
       team.captain = name;
+      break;
   }
 
   // Is the player already on the team?
   if(!team.roster.find(p => p.name === name)) {
-    // TODO: We likely do need some kind of object shape here.
     team.roster.push({ name });
   }
 
@@ -223,13 +224,10 @@ router.post('/teams/:team_id/roster/remove', function(req,res) {
   }
 
   const team = getTeam(req.params.team_id);
-
-  // TODO: It might be better to return a 500 or something, but since we
-  //  are returning rendered html, that's not as good a model.
   if(!team) { return res.redirect('/teams'); }
 
   if(!req.body || !req.body.key) {
-    console.log('Jacked up on roster/remove');
+    console.warn('Jacked up on roster/remove');
   }
 
   // Does the team even have this player?
