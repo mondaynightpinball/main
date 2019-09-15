@@ -90,8 +90,6 @@ const canEdit = (venue, user) => {
     .filter(tk => (teams[tk].venue === venue.key))
     .map(tk => teams[tk])
     .forEach(team => {
-      console.log('captain:', team.captain, makeKey(team.captain));
-      console.log('co_captain:', team.co_captain, makeKey(team.co_captain));
       if(makeKey(team.captain) === user.key) {
         isHomeCaptain = true;
       }
