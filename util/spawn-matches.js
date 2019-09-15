@@ -24,22 +24,14 @@ const pad = (num) => {
 };
 
 const DAY_IN_MS = 1000 * 60 * 60 * 24;
+const MATCH_TIME = 1000 * 60 * 60 * 21; // 9pm
 
 const getOrder = (date) => {
-  return date.getTime() / DAY_IN_MS;
+  return (date.getTime() + MATCH_TIME) / DAY_IN_MS;
 }
 
-const getOrder_nonLinear = (date) => {
-  const s = [
-    date.getFullYear(),
-    pad(date.getMonth() + 1),
-    pad(date.getDate() + 1)
-  ].join('');
-  return parseInt(s);
-};
-
 const now = new Date();
-const time = getOrder(now);
+const time = now / DAY_IN_MS;
 
 let current;
 
