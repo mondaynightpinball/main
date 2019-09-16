@@ -82,10 +82,12 @@ const canEdit = (venue, user) => {
   if(user.key === CONST.ROOT) {
     return true;
   }
+
   // See if user is a captain at the venue.
   const {teams} = seasons.get();
   let isHomeCaptain = false;
 
+  /*
   Object.keys(teams)
     .filter(tk => (teams[tk].venue === venue.key))
     .map(tk => teams[tk])
@@ -97,7 +99,8 @@ const canEdit = (venue, user) => {
         isHomeCaptain = true;
       }
     });
-
+  */
+  
   return isHomeCaptain;
 };
 
