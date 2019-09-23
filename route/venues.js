@@ -87,6 +87,7 @@ const canEdit = (venue, user) => {
   const {teams} = seasons.get();
   let isHomeCaptain = false;
 
+  // TODO: Re-enable captain editing after updating machine picker.
   /*
   Object.keys(teams)
     .filter(tk => (teams[tk].venue === venue.key))
@@ -100,7 +101,7 @@ const canEdit = (venue, user) => {
       }
     });
   */
-  
+
   return isHomeCaptain;
 };
 
