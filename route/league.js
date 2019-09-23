@@ -186,6 +186,33 @@ router.get('/players',function(req,res) {
   res.send(html);
 });
 
+router.get('/rosters.csv',function(req,res) {
+  // Get all the players on teams in the current season.
+  // TODO: Ideally, you could get rosters at any week of any season.
+  const {teams} = seasons.get();
+
+  res.type('text/csv');
+
+  res.send(
+    Object.keys(teams).reduce((list, tk) => {
+      return [
+        ...list,
+        ...teams[tk].roster.map(p => ([
+          p.name,
+          tk,
+          // Determine player role
+          teams[tk].captain === p.name ? 'C' :
+          teams[tk].co_captain === p.name ? 'A' :
+          'P',
+          // TODO: legacy playerdb.csv includes IFPA # and division
+        ].join(','))),
+      ];
+    }, [])
+    .sort()
+    .join('\n')
+  );
+});
+
 router.get('/players/:key',function(req,res) {
   const template = fs.readFileSync('./template/player.html').toString();
   // var p = players.get(req.params.key);
