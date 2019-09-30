@@ -130,18 +130,30 @@ router.get('/stats',function(req,res) {
   res.send(html);
 });
 
-// router.get('/rules',function(req,res) {
-//   const template = fs.readFileSync('./template/rules3.html').toString();
-//   const html = mustache.render(base,{
-//     title: 'Rules'
-//   },{
-//     content: template
-//   });
-//   res.send(html);
-// });
+router.get('/leaguerules',function(req,res) {
+  res.sendFile('template/leaguerules.html', {root: '.'});
 
-router.get('/rules',function(req,res) {
-  res.redirect('https://docs.google.com/document/d/1NFfEDEAiFp470DArcyAQeTp4eFJ02fHLWYfaaxoowbc/edit');
+  // TODO: Provide better formatting for generated html
+  // const template = fs.readFileSync('./template/leaguerules.html').toString();
+  // const html = mustache.render(base,{
+  //   title: 'League Rules'
+  // },{
+  //   content: template
+  // });
+  // res.send(html);
+});
+
+router.get('/matchrules',function(req,res) {
+  res.sendFile('template/matchrules.html', {root: '.'});
+
+  // TODO: Provide better formatting for generated html
+  // const template = fs.readFileSync('./template/matchrules.html').toString();
+  // const html = mustache.render(base,{
+  //   title: 'Match Rules'
+  // },{
+  //   content: template
+  // });
+  // res.send(html);
 });
 
 router.get('/new-teams',function(req,res) {
