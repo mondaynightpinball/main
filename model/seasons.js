@@ -42,7 +42,7 @@ function loadSeason(key) {
   // TODO: There is a whole lot of require hell going on here.
   season.getStandings = () => require('../lib/get-standings')(season, require('./matches'));
 
-  console.log("loadSeason()",key,fn,season.key);
+  // console.log("loadSeason()",key,fn,season.key);
   return season;
 }
 
