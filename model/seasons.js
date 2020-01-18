@@ -46,7 +46,7 @@ function loadSeason(key) {
   return season;
 }
 
-var CURRENT = 'season-12';
+var CURRENT = 'season-13';
 
 var _map = {
   // Not sure why we would need to load other seasons like this.
