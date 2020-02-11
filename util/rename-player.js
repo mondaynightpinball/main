@@ -1,8 +1,11 @@
 'use strict';
 
+const fs = require('fs');
+const util = require('../lib/util');
 const players = require('../model/players');
 const makeKey = require('../lib/make-key');
 const { shadows } = require('../lib/auth');
+const findSessions = require('./find-sessions');
 
 const fromName = process.argv[2];
 const toName = process.argv[3];
@@ -40,8 +43,6 @@ console.log('newPlayer:', newPlayer);
 newPlayer.save();
 
 // Migrate player password shadow so they don't have to re-signup (since there is no change password).
-// Players will need to login again, though. We could potentially migrate their
-// session object as well.
 const shadow = shadows.get(oldPlayer.key);
 
 console.log('shadow:', shadow);
@@ -52,5 +53,34 @@ if(shadow) {
 }
 
 players.destroy(oldPlayer.key);
+
+console.log('Finding sessions to update for', fromName);
+
+// Update session file, if it exists
+findSessions({name: fromName}).forEach(sessionId => {
+  console.log('sessionId', sessionId);
+  const sessionFilename = `data/sessions/${sessionId}`;
+  const session = JSON.parse(fs.readFileSync(sessionFilename));
+  console.log('from:', session);
+  session.key = newPlayer.key;
+  console.log('to', session);
+
+  fs.writeFileSync(sessionFilename, JSON.stringify(session,null,2));
+})
+
+
+// console.log(fs.readdirSync('data/sessions'));
+//
+// const sessionFile = `data/sessions/${oldPlayer.key}`;
+// if (util.fileExists(sessionFile)) {
+//   try {
+//     fs.writeFileSync(sessionFile, JSON.stringify({
+//       key: newPlayer.key,
+//       created_at: Date.now()
+//     }, null, 2));
+//   } catch (e) {
+//     console.log(e);
+//   }
+// }
 
 console.log('ALL DONE');
