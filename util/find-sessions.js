@@ -2,7 +2,7 @@ const fs = require('fs');
 
 const makeKey = require('../lib/make-key');
 
-const debug = console.log;
+const debug = () => {}; //console.log;
 
 const sessionDir = 'data/sessions';
 
