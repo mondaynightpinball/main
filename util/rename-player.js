@@ -45,7 +45,7 @@ newPlayer.save();
 // Migrate player password shadow so they don't have to re-signup (since there is no change password).
 const shadow = shadows.get(oldPlayer.key);
 
-console.log('shadow:', shadow);
+console.log('shadow:', !!shadow);
 
 if(shadow) {
   shadows.set(newPlayer.key, shadow);
@@ -66,21 +66,6 @@ findSessions({name: fromName}).forEach(sessionId => {
   console.log('to', session);
 
   fs.writeFileSync(sessionFilename, JSON.stringify(session,null,2));
-})
-
-
-// console.log(fs.readdirSync('data/sessions'));
-//
-// const sessionFile = `data/sessions/${oldPlayer.key}`;
-// if (util.fileExists(sessionFile)) {
-//   try {
-//     fs.writeFileSync(sessionFile, JSON.stringify({
-//       key: newPlayer.key,
-//       created_at: Date.now()
-//     }, null, 2));
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
+});
 
 console.log('ALL DONE');
