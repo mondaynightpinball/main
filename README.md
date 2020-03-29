@@ -5,6 +5,20 @@
 As of January 23rd, 2018, the MNP main codebase is now open source, under Gnu Public License (GPL).
 Visit the live site at: [https://www.mondaynightpinball.com](https://www.mondaynightpinball.com)
 
+## Easy Installation
+
+### Clone / Install dependencies / Setup minimal files and folders:
+
+This assumes Node.js is installed - which is beyond the scope of these installation steps.
+
+```
+git clone https://github.com/mondaynightpinball/main.git
+source ./setupMNPFolders.sh
+node http.js
+```
+
+
+
 ## Installation
 
 ### Clone and Install the dependencies:
