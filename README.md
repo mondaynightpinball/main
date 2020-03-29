@@ -19,7 +19,7 @@ node http.js
 
 
 
-## Installation
+## Manual Installation
 
 ### Clone and Install the dependencies:
 
