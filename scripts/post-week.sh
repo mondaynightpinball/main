@@ -27,13 +27,7 @@ node util/summarize-weeks.js
 
 sh scripts/restart.sh
 
-# TODO: Sync to data-archive
-# What is the current season? Or just call a .js from here.
-# TODO: cp data/matches/* ../data-archive/season-10/matches/
-# TODO: git add .  <- Assuming that we're on the right branch
-# TODO: git commit -m "Season 10, Week N"
-# TODO: git push origin <branch>
+sh scripts/sync-to-archive.sh
 
 # TODO: Scan for weird machines and players -> send report
 # TODO: Automated recaps and highlights?
-

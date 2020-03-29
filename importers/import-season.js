@@ -2,7 +2,7 @@ const fs = require('fs');
 var venues = require('../model/venues');
 var csv = require('../lib/csv');
 
-var num = process.argv[2] || '12';
+var num = process.argv[2] || '13';
 
 var stem = 'data/season-' +num+ '/';
 
@@ -55,18 +55,18 @@ for(let i = 1; i < 20; i++) {
 //NOTE: These labels are for season 9.
 //      Earlier seasons did not have a WC round.
 //      Also, there are now 2 divisions.
-labels[91] = 'Wild Card';
+labels[91] = 'Quarter Finals';
 labels[92] = 'Semi Finals';
 labels[93] = 'Finals & Bronze';
 
-codes[91] = 'WC';
+codes[91] = 'QF';
 codes[92] = 'SF';
 codes[93] = 'FNL';
 
 codes['S'] = 'SCRM';
 
 //SECOND, Load all the players and assign them to their teams.
-rows = csv.load(stem + 'playerdb.csv');
+rows = csv.load(stem + 'rosters.csv');
 
 //Figure out which teams players go on, and if they are captains.
 for(let i in rows) {
@@ -160,7 +160,10 @@ for(let i in rows) {
     if(!venue) {
       console.warn('Venue not found:', match.venue, match.key);
 
-      venue = venues.get(home.venue);
+      venue = venues.get(home.venue) || {
+        key: 'TBD',
+        name: 'To Be Determined',
+      };
 
       // If the venue is still undefined, there will be an error below,
       // which is probably ok, because the matches.csv is not correct.
