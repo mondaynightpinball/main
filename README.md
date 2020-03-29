@@ -7,9 +7,14 @@ Visit the live site at: [https://www.mondaynightpinball.com](https://www.mondayn
 
 ## Easy Installation
 
+On a fresh machine, this is the minimum to allow the MNP web site to run.
+
 ### Clone / Install dependencies / Setup minimal files and folders:
 
 This assumes Node.js is installed - which is beyond the scope of these installation steps.
+
+If no data folders exist, setupMNPFolders.sh will create them and populate with a minimal
+sample 'season-0' with a single match.
 
 ```
 git clone https://github.com/mondaynightpinball/main.git
@@ -17,6 +22,13 @@ source ./setupMNPFolders.sh
 node http.js
 ```
 
+To change the season, you can either edit the .env file (in the root project folder - created by
+setupMNPFolders.sh.  Alternately, you can specify a different CURRENT_SEASON environment variable
+on the command line.
+
+```
+CURRENT_SEASON=season-13 node http.js
+```
 
 
 ## Manual Installation
