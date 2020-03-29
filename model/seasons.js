@@ -46,7 +46,8 @@ function loadSeason(key) {
   return season;
 }
 
-var CURRENT = 'season-13';
+require('dotenv').load();
+const CURRENT = (process.env.CURRENT_SEASON ? process.env.CURRENT_SEASON : 'season-13');
 
 var _map = {
   // Not sure why we would need to load other seasons like this.
