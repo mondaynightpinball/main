@@ -26,7 +26,7 @@ function format(num) {
 }
 
 // TODO: Stop using hardcoded season numbers.
-const rosters = fs.readFileSync('data/season-12/playerdb.csv').toString()
+const rosters = fs.readFileSync('data/season-13/rosters.csv').toString()
 //.replace('\r', '')
 .split('\n')
 .filter(line => line.length > 0)

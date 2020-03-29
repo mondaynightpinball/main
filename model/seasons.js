@@ -42,11 +42,11 @@ function loadSeason(key) {
   // TODO: There is a whole lot of require hell going on here.
   season.getStandings = () => require('../lib/get-standings')(season, require('./matches'));
 
-  console.log("loadSeason()",key,fn,season.key);
+  // console.log("loadSeason()",key,fn,season.key);
   return season;
 }
 
-var CURRENT = 'season-12';
+var CURRENT = 'season-13';
 
 var _map = {
   // Not sure why we would need to load other seasons like this.
